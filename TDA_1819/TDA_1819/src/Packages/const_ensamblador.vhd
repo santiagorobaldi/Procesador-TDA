@@ -39,6 +39,11 @@ PACKAGE const_ensamblador is
 	CONSTANT CANT_INSTTC:		INTEGER := 7;
 	CONSTANT CANT_INSTCT:		INTEGER := 2;
 	
+	---------------------------------------------------
+	CONSTANT CANT_INSMDP:		INTEGER := 2;
+	---------------------------------------------------
+	
+	
 	CONSTANT IS_STRING: 		INTEGER := 1;
 	CONSTANT IS_STRINGZ:		INTEGER := 2;
 	CONSTANT IS_INTEGER: 		INTEGER := 3;
@@ -82,7 +87,13 @@ PACKAGE const_ensamblador is
 	
 	CONSTANT INSTCT_NAMES: 		instct_name_array(1 to CANT_INSTCT) := ("nop ", "halt");
 	CONSTANT INSTCT_CODES:		instct_code_array(1 to CANT_INSTCT) := (NOP, HALT);
-	CONSTANT INSTCT_SIZES:		instct_size_array(1 to CANT_INSTCT) := (2, 2);
+	CONSTANT INSTCT_SIZES:		instct_size_array(1 to CANT_INSTCT) := (2, 2); 
+	
+	-----------------------------------------------------------------------------------------------------
+	CONSTANT INSMDP_NAMES: 		insmdp_name_array(1 to CANT_INSMDP) := ("pushh", "poph ");
+	CONSTANT INSMDP_CODES:		insmdp_code_array(1 to CANT_INSMDP) := (PUSHH, POPH);
+	CONSTANT INSMDP_SIZES:		insmdp_size_array(1 to CANT_INSMDP) := (3, 3); 
+	-----------------------------------------------------------------------------------------------------
 	
 	
 END const_ensamblador;

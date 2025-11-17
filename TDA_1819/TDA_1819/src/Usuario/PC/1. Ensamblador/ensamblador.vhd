@@ -1873,7 +1873,154 @@ begin
 		else
 			check := false;
 		end if;
-	END checkInstLD;
+	END checkInstLD; 
+	
+	PROCEDURE checkInstMdp(
+    CONSTANT cadena      : IN STRING;
+    CONSTANT INSMDP_NAME : IN STRING;
+    CONSTANT INSMDP_CODE : IN STD_LOGIC_VECTOR(7 downto 0);
+    CONSTANT INSMDP_SIZE : IN INTEGER;
+    i                    : INOUT INTEGER;
+    check                : INOUT BOOLEAN;
+    CONSTANT nombre      : IN STRING;
+    CONSTANT num_linea   : IN INTEGER;
+    CONSTANT addr_linea  : IN INTEGER
+) IS
+    VARIABLE match   : BOOLEAN := true;
+    VARIABLE indice  : INTEGER := i;
+    VARIABLE numReg1 : INTEGER;
+BEGIN
+    --------------------------------------------------------------------
+    -- 1) Matchear el mnemónico (pushh / poph)
+    --------------------------------------------------------------------
+    FOR j IN INSMDP_NAME'RANGE LOOP
+        -- Se permite que el nombre en la tabla esté rellenado con espacios
+        IF (INSMDP_NAME(j) = ' ') THEN
+            EXIT;
+        END IF;
+
+        IF (cadena(indice) /= INSMDP_NAME(j)) THEN
+            match := false;
+            EXIT;
+        END IF;
+
+        indice := indice + 1;
+    END LOOP;
+
+    -- Si no matchea el mnemónico, este procedimiento "no aplica"
+    IF (NOT match) THEN
+        check := false;
+        RETURN;
+    END IF;
+
+    --------------------------------------------------------------------
+    -- 2) Debe venir al menos un espacio
+    --------------------------------------------------------------------
+    IF (cadena(indice) /= ' ') THEN
+        report "Error en la línea " & integer'image(num_linea) &
+               " del programa '" & trim(nombre) &
+               "': falta un espacio luego del mnemónico de la instrucción"
+        severity FAILURE;
+    END IF;
+
+    -- Consumir todos los espacios
+    WHILE (cadena(indice) = ' ') LOOP
+        indice := indice + 1;
+    END LOOP;
+
+    --------------------------------------------------------------------
+    -- 3) Operando: rN   (solo registros enteros r0..r15)
+    --------------------------------------------------------------------
+    IF (cadena(indice) /= 'r') THEN
+        report "Error en la línea " & integer'image(num_linea) &
+               " del programa '" & trim(nombre) &
+               "': el operando se encuentra incorrectamente declarado"
+        severity FAILURE;
+    END IF;
+
+    numReg1 := 0;
+    indice  := indice + 1;
+
+    -- Primer dígito del número de registro
+    IF (NOT isNumber(cadena(indice))) THEN
+        report "Error en la línea " & integer'image(num_linea) &
+               " del programa '" & trim(nombre) &
+               "': el operando se encuentra incorrectamente declarado"
+        severity FAILURE;
+    END IF;
+
+    FOR j IN DIGITS_DEC'RANGE LOOP
+        IF (cadena(indice) = DIGITS_DEC(j)) THEN
+            numReg1 := numReg1 + j - 1;
+            EXIT;
+        END IF;
+    END LOOP;
+
+    indice := indice + 1;
+
+    -- Posible segundo dígito para r10..r15
+    IF (cadena(indice-1) = '1') THEN
+        CASE cadena(indice) IS
+            WHEN '0' TO '5' =>
+                FOR j IN DIGITS_DEC'RANGE LOOP
+                    IF (cadena(indice) = DIGITS_DEC(j)) THEN
+                        numReg1 := 10 + j - 1;
+                        EXIT;
+                    END IF;
+                END LOOP;
+                indice := indice + 1;
+            WHEN OTHERS =>
+                NULL;  -- si no es 0..5, entonces era r1 y listo
+        END CASE;
+    END IF;
+
+    -- Podrías agregar aquí chequeo de caracteres extra si querés ser más estricto
+    -- (por ejemplo, que luego del operando solo haya espacios)
+
+    --------------------------------------------------------------------
+    -- 4) Generación de código máquina (3 bytes)
+    --    byte 0: tamaño de la instrucción (INSMDP_SIZE = 3)
+    --    byte 1: opcode (INSMDP_CODE)
+    --    byte 2: número de registro (numReg1)
+    --------------------------------------------------------------------
+    -- Byte 0: tamaño
+    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
+    InstDataBusOutComp <= std_logic_vector(to_unsigned(INSMDP_SIZE, InstDataBusOutComp'length));
+    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+    InstCtrlBusComp    <= WRITE_MEMORY;
+    EnableCompToInstMem <= '1';
+    WAIT FOR 1 ns;
+    EnableCompToInstMem <= '0';
+    WAIT FOR 1 ns;
+
+    -- Byte 1: opcode
+    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 1, InstAddrBusComp'length));
+    InstDataBusOutComp <= (OTHERS => '0');
+    InstDataBusOutComp(7 downto 0) <= INSMDP_CODE;
+    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+    InstCtrlBusComp    <= WRITE_MEMORY;
+    EnableCompToInstMem <= '1';
+    WAIT FOR 1 ns;
+    EnableCompToInstMem <= '0';
+    WAIT FOR 1 ns;
+
+    -- Byte 2: número de registro
+    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 2, InstAddrBusComp'length));
+    InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
+    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+    InstCtrlBusComp    <= WRITE_MEMORY;
+    EnableCompToInstMem <= '1';
+    WAIT FOR 1 ns;
+    EnableCompToInstMem <= '0';
+    WAIT FOR 1 ns;
+
+    --------------------------------------------------------------------
+    -- 5) Actualizar índice y flag de éxito
+    --------------------------------------------------------------------
+    i     := indice;
+    check := true;
+END checkInstMdp;
+
 	
 	
 	PROCEDURE checkInstTc(offsets: INOUT offset_records; cant_offsets: INOUT INTEGER;
@@ -2178,7 +2325,28 @@ begin
 				end loop;
 				exit;
 			end if;
-		end loop;							  
+		end loop;	
+		
+		
+		 -- ============================================================
+        --  NUEVO GRUPO: Manejo de la Pila (pushh/poph)
+        -- ============================================================
+        for j in INSMDP_NAMES'RANGE loop
+            checkInstMdp(cadena, INSMDP_NAMES(j), INSMDP_CODES(j),
+                          INSMDP_SIZES(j), i, check,
+                          nombre, num_linea, addr_linea);
+
+            if (check) then
+                addr_linea := addr_linea + INSMDP_SIZES(j);
+
+                for k in INSMDP_NAMES(j)'RANGE loop
+                    CompToSM.name_inst(k) <= INSMDP_NAMES(j)(k);
+                end loop;
+
+                exit;   -- ya se reconoció una instrucción MDP
+            end if;
+        end loop;
+		
 		if (not check) then
 			for j in INSTAR_NAMES'RANGE loop
 				checkInstAr(cadena, INSTAR_NAMES(j), INSTAR_CODES(j), INSTAR_SIZES(j), i, check, nombre, num_linea, addr_linea);

@@ -3,13 +3,10 @@ Current Flow=Multivendor
 VCS=0
 version=4
 Current Config=compile
-
 [Configurations]
 compile=TDA_1819
-
 [Library]
 TDA_1819=.\TDA_1819\TDA_1819.lib
-
 [Settings]
 AccessRead=0
 AccessReadWrite=0
@@ -35,11 +32,9 @@ RetvalMemorySize=32
 StackMemorySize=32
 resolution=1 ns
 VsimAdditionalOptions=
-
 [LocalVerilogSets]
 EnableSLP=1
 EnableDebug=0
-
 [LocalVhdlSets]
 CompileWithDebug=0
 NetlistCompilation=1
@@ -54,14 +49,11 @@ DisableRangeChecks=0
 ProtectLevel=0
 IncrementalCompilation=0
 AdditionalOptions=
-
 [$LibMap$]
 TDA_1819=.
 Active_lib=
-
 [IMPLEMENTATION]
 UCF=
-
 [Groups]
 Packages=1
 Usuario=1
@@ -88,15 +80,12 @@ Usuario\PC\2. CPU\6. Reloj=1
 Usuario\PC\2. CPU\7. Registros=1
 Usuario\PC\3. Buses_Admin=1
 Usuario\PC\4. Memoria=1
-
 [SpecTracer]
 WindowVisible=0
-
 [HierarchyViewer]
-HierarchyInformation=usuario|USUARIO_ARCHITECTURE|0   
+HierarchyInformation=usuario|usuario_architecture|0
 ShowHide=ShowTopLevel
 Selected=
-
 [Files]
 Packages/const_reloj.vhd=-1
 Packages/tipos_cpu.vhd=-1
@@ -136,7 +125,6 @@ Usuario\PC\2. CPU\6. Reloj/reloj.vhd=-1
 Usuario\PC\2. CPU\7. Registros/registros.vhd=-1
 Usuario\PC\3. Buses_Admin/buses_admin.vhd=-1
 Usuario\PC\4. Memoria/memoria.vhd=-1
-
 [Files.Data]
 .\src\Packages\const_reloj.vhd=VHDL Source Code
 .\src\Packages\tipos_cpu.vhd=VHDL Source Code
@@ -176,4 +164,3 @@ Usuario\PC\4. Memoria/memoria.vhd=-1
 .\src\Usuario\PC\2. CPU\7. Registros\registros.vhd=VHDL Source Code
 .\src\Usuario\PC\3. Buses_Admin\buses_admin.vhd=VHDL Source Code
 .\src\Usuario\PC\4. Memoria\memoria.vhd=VHDL Source Code
-
