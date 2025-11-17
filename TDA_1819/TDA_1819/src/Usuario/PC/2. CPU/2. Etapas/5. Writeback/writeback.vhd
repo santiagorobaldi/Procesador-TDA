@@ -1,4 +1,3 @@
-
 -- Entidad "writeback":
 -- Descripción: Aquí se define la última etapa de la segmentación del procesador: la
 -- del almacenamiento en registro, la cual recibe del banco de registros internos
@@ -39,16 +38,12 @@ library TDA_1819;
 use TDA_1819.const_buses.all;
 use TDA_1819.const_cpu.all; 
 use TDA_1819.tipos_cpu.all; 
+use TDA_1819.const_registros.all; 
 
-
-LIBRARY IEEE;
-
-USE std.textio.all;
+library IEEE;
+use std.textio.all;
 use ieee.NUMERIC_STD.all;
-USE IEEE.std_logic_1164.all; 
-
-
-
+use IEEE.std_logic_1164.all; 
 
 entity writeback is
 	
@@ -71,102 +66,115 @@ entity writeback is
 
 end writeback;
 
-
-
-
 architecture WRITEBACK_ARCHITECTURE of writeback is
 
-
+	-- Registro efectivo que se va a escribir en este ciclo
 	SIGNAL RecInWBAct: writeback_record;
-	SIGNAL RecInWBAux: writeback_record;
-	SIGNAL RecInWBAux2: writeback_record;
-	SIGNAL IdRecWAW: std_logic_vector(7 downto 0);
 
+	-- Registros auxiliares para manejar WAW / estructurales
+	SIGNAL RecInWBAux:  writeback_record;
+	SIGNAL RecInWBAux2: writeback_record;
+	SIGNAL IdRecWAW:    std_logic_vector(7 downto 0);
 	
 begin
 	
-	
 	Main: PROCESS 
 	
-	VARIABLE First: BOOLEAN := true;
-	VARIABLE Mode: INTEGER;
-	VARIABLE Source: INTEGER;
-	VARIABLE SizeBits: INTEGER;
-	
-	PROCEDURE InitializeRecInWBAux IS
-	
-	BEGIN
-		RecInWBAux.mode <= std_logic_vector(to_unsigned(WB_NULL, RecInWBAux.mode'length));
-		RecInWBAux.id <= "ZZZZZZZZ";
-		RecInWBAux.datasize <= "ZZZZ";
-		RecInWBAux.source <= "ZZZZ";
-		RecInWBAux.data.decode <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
-	END InitializeRecInWBAux;
-	
-	PROCEDURE InitializeRecInWBAux2 IS
-	
-	BEGIN
-		RecInWBAux2.mode <= std_logic_vector(to_unsigned(WB_NULL, RecInWBAux.mode'length));
-		RecInWBAux2.id <= "ZZZZZZZZ";
-		RecInWBAux2.datasize <= "ZZZZ";
-		RecInWBAux2.source <= "ZZZZ";
-		RecInWBAux2.data.decode <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
-	END InitializeRecInWBAux2;
+		VARIABLE First    : BOOLEAN := true;
+		VARIABLE Mode     : INTEGER;
+		VARIABLE Source   : INTEGER;
+		VARIABLE SizeBits : INTEGER;		 
+		 variable sp_base : unsigned(15 downto 0);
+		
+		PROCEDURE InitializeRecInWBAux IS
+		BEGIN
+			RecInWBAux.mode        <= std_logic_vector(to_unsigned(WB_NULL, RecInWBAux.mode'length));
+			RecInWBAux.id          <= (others => 'Z');
+			RecInWBAux.datasize    <= (others => 'Z');
+			RecInWBAux.source      <= (others => 'Z');
+			RecInWBAux.data.decode <= (others => 'Z');
+			RecInWBAux.data.execute<= (others => 'Z');
+			RecInWBAux.data.memaccess <= (others => 'Z');
+		END InitializeRecInWBAux;
+		
+		PROCEDURE InitializeRecInWBAux2 IS
+		BEGIN
+			RecInWBAux2.mode        <= std_logic_vector(to_unsigned(WB_NULL, RecInWBAux2.mode'length));
+			RecInWBAux2.id          <= (others => 'Z');
+			RecInWBAux2.datasize    <= (others => 'Z');
+			RecInWBAux2.source      <= (others => 'Z');
+			RecInWBAux2.data.decode <= (others => 'Z');
+			RecInWBAux2.data.execute<= (others => 'Z');
+			RecInWBAux2.data.memaccess <= (others => 'Z');
+		END InitializeRecInWBAux2;
 	
 	BEGIN 
+		----------------------------------------------------------------
+		-- Inicialización
+		----------------------------------------------------------------
 		if (First) then
 			First := false;
-			IdRecWAW <= "ZZZZZZZZ";
-			DoneSTRW <= '0';
-			EnableRegWB <= '0';
+			IdRecWAW       <= (others => 'Z');
+			DoneSTRW       <= '0';
+			EnableRegWB    <= '0';
 			EnableCheckWAW <= '0';
-			EnableDecWrPend <= '0';
+			EnableDecWrPend<= '0';
 			InitializeRecInWBAux;
 			InitializeRecInWBAux2;
 			WAIT FOR 1 ns;
 		end if;
+
+		----------------------------------------------------------------
+		-- Fase 1: detección WAW / estructurales, selección de RecInWBAct
+		----------------------------------------------------------------
 		WAIT UNTIL rising_edge(EnableWB);
+
+		-- Enviar registro a detector de WAW
 		WbRegCheckWAW <= RecInWB;
 		EnableCheckWAW <= '1';
 		WAIT FOR 1 ns;
 		EnableCheckWAW <= '0';
+
 		if (StallWAW = '0') then
+			----------------------------------------------------------------
+			-- No hay stall WAW: elegir qué registro escribir
+			----------------------------------------------------------------
 			if (to_integer(unsigned(RecInWBAux.mode)) = WB_NULL) then
+				-- No hay auxiliar pendiente
 				if (IdRecWAW /= "ZZZZZZZZ") then
-					if (RecInWB.id < IdRecWAW) then	
+					-- Hubo WAW previo: comparar IDs
+					if (RecInWB.id < IdRecWAW) then
 						IdRegDecWrPend <= RecInWB.mode;
 						EnableDecWrPend <= '1';
 						WAIT FOR 1 ns;
 						EnableDecWrPend <= '0';
 						RecInWBAct <= RecInWB;
 						Mode := to_integer(unsigned(RecInWB.mode));
-						--Source := to_integer(unsigned(RecInWB.source));
-						--SizeBits := to_integer(unsigned(RecInWB.datasize))*8;
 					else
-						Mode := WB_NULL;
+						Mode        := WB_NULL;
 						RecInWBAux2 <= RecInWB;
 					end if;
 				elsif (to_integer(unsigned(RecInWBAux2.mode)) /= WB_NULL) then
+					-- Hay auxiliar "2" pendiente
 					IdRegDecWrPend <= RecInWBAux2.mode;
 					EnableDecWrPend <= '1';
 					WAIT FOR 1 ns;
 					EnableDecWrPend <= '0';
 					RecInWBAct <= RecInWBAux2;
-					Mode := to_integer(unsigned(RecInWBAux2.mode));
-					--Source := to_integer(unsigned(RecInWBAux2.source));
-					--SizeBits := to_integer(unsigned(RecInWBAux2.datasize))*8;
+					Mode       := to_integer(unsigned(RecInWBAux2.mode));
 					InitializeRecInWBAux2;
 				else
+					-- Caso normal: usar RecInWB actual
 					IdRegDecWrPend <= RecInWB.mode;
 					EnableDecWrPend <= '1';
 					WAIT FOR 1 ns;
 					EnableDecWrPend <= '0';
 					RecInWBAct <= RecInWB;
-					Mode := to_integer(unsigned(RecInWB.mode));
-					--Source := to_integer(unsigned(RecInWB.source));
-					--SizeBits := to_integer(unsigned(RecInWB.datasize))*8;
+					Mode       := to_integer(unsigned(RecInWB.mode));
 				end if;
+
 			elsif (StallSTR = '1') then
+				-- Hay stall estructural de memoria
 				DoneSTRW <= '1';
 				if (to_integer(unsigned(RecInWBAux2.mode)) /= WB_NULL) then
 					IdRegDecWrPend <= RecInWBAux.mode;
@@ -175,9 +183,7 @@ begin
 					EnableDecWrPend <= '0';
 					DoneSTRW <= '0';
 					RecInWBAct <= RecInWBAux;
-					Mode := to_integer(unsigned(RecInWBAux.mode));
-					--Source := to_integer(unsigned(RecInWBAux.source));
-					--SizeBits := to_integer(unsigned(RecInWBAux.datasize))*8;
+					Mode       := to_integer(unsigned(RecInWBAux.mode));
 					InitializeRecInWBAux;
 				elsif (RecInWB.id < RecInWBAux.id) then
 					IdRegDecWrPend <= RecInWB.mode;
@@ -185,9 +191,7 @@ begin
 					WAIT FOR 1 ns;
 					EnableDecWrPend <= '0';
 					RecInWBAct <= RecInWB;
-					Mode := to_integer(unsigned(RecInWB.mode));
-					--Source := to_integer(unsigned(RecInWB.source));
-					--SizeBits := to_integer(unsigned(RecInWB.datasize))*8;
+					Mode       := to_integer(unsigned(RecInWB.mode));
 				else
 					IdRegDecWrPend <= RecInWBAux.mode;
 					EnableDecWrPend <= '1';
@@ -195,73 +199,123 @@ begin
 					EnableDecWrPend <= '0';
 					DoneSTRW <= '0';
 					RecInWBAct <= RecInWBAux;
-					Mode := to_integer(unsigned(RecInWBAux.mode));
-					--Source := to_integer(unsigned(RecInWBAux.source));
-					--SizeBits := to_integer(unsigned(RecInWBAux.datasize))*8;
+					Mode       := to_integer(unsigned(RecInWBAux.mode));
 					InitializeRecInWBAux;
 				end if;
 			else
+				-- Hay algo en RecInWBAux y no hay stall estructural
 				IdRegDecWrPend <= RecInWBAux.mode;
 				EnableDecWrPend <= '1';
 				WAIT FOR 1 ns;
 				EnableDecWrPend <= '0';
 				DoneSTRW <= '0';
 				RecInWBAct <= RecInWBAux;
-				Mode := to_integer(unsigned(RecInWBAux.mode));
-				--Source := to_integer(unsigned(RecInWBAux.source));
-				--SizeBits := to_integer(unsigned(RecInWBAux.datasize))*8;
+				Mode       := to_integer(unsigned(RecInWBAux.mode));
 				InitializeRecInWBAux;
 			end if;
+
+			-- Actualizar auxiliar con resultado del detector WAW
 			if (DoneWAW = '1') then
 				RecInWBAux <= WbRegDoneWAW;
-				IdRecWAW <= "ZZZZZZZZ";
+				IdRecWAW   <= (others => 'Z');
 			end if;
 		else
-			Mode := WB_NULL;
-			IdRecWAW <= RecInWB.id;
+			-- Stall WAW activo: no se escribe este ciclo
+			Mode    := WB_NULL;
+			IdRecWAW<= RecInWB.id;
 		end if;
+
+		----------------------------------------------------------------
+		-- Fase 2: escritura efectiva en banco de registros
+		----------------------------------------------------------------
 		WAIT UNTIL falling_edge(EnableWB);
-		if (Mode /= WB_NULL) then												 
-			Source := to_integer(unsigned(RecInWBAct.source));
-			SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8;
-			IdRegWB <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length));	 
-			SizeRegWB <= RecInWBAct.datasize;
-			DataRegInWB <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
-			--for i in DataRegInWB'length-1 downto SizeBits loop
-				--DataRegInWB(i) <= '0';
-			--end loop;
-			CASE Source IS
-				WHEN WB_ID =>
-					for i in SizeBits-1 downto 0 loop
-						DataRegInWB(i) <= RecInWBAct.data.decode(i);
-					end loop;
-				WHEN WB_EX =>
-					for i in SizeBits-1 downto 0 loop
-						DataRegInWB(i) <= RecInWBAct.data.execute(i);
-					end loop;
-				WHEN WB_MEM =>
-					for i in SizeBits-1 downto 0 loop
-						DataRegInWB(i) <= RecInWBAct.data.memaccess(i);
-					end loop;
-				WHEN OTHERS =>
-					report "Error: la configuración de la etapa de almacenamiento en registro no es válida"
-					severity FAILURE;
-			END CASE;
-			EnableRegWB <= '1';
-			WAIT FOR 1 ns;
-			EnableRegWB <= '0';
-			WAIT FOR 1 ns;
-		end if;
-		--IdRegDecWrPend <= RecInWB.mode;
-		--EnableDecWrPend <= '1';
-		--WAIT FOR 1 ns;
-		--EnableDecWrPend <= '0';
+
+		        if (Mode /= WB_NULL) then
+            Source   := to_integer(unsigned(RecInWBAct.source));
+            SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8;
+
+            -- Flag POPH: usamos bit 31 de data.decode
+            if (RecInWBAct.data.decode(31) = '1') then
+                ----------------------------------------------------------------
+                -- INSTRUCCIÓN POPH (penalizada en WB):
+                --   data.memaccess           = valor leido de pila (halfword)
+                --   data.decode(15 downto 0) = SP_base (SP actual en decode)
+                --
+                -- En WB hacemos:
+                --   1) rN <= data.memaccess
+                --   2) SP <= SP_base + 2
+                ----------------------------------------------------------------
+
+                -- 1) Escritura de rN con valor de la pila
+                IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length)); -- Mode = rN+1
+                SizeRegWB <= RecInWBAct.datasize;
+                DataRegInWB <= (others => '0');
+
+                case Source is
+                    when WB_MEM =>
+                        for i in 0 to SizeBits-1 loop
+                            DataRegInWB(i) <= RecInWBAct.data.memaccess(i);
+                        end loop;
+                    when others =>
+                        report "Error: POPH configurado con un origen de dato no válido en writeback"
+                        severity FAILURE;
+                end case;
+
+                EnableRegWB <= '1';
+                WAIT FOR 1 ns;
+                EnableRegWB <= '0';
+                WAIT FOR 1 ns;
+
+                -- 2) Escritura de SP con SP_base + 2
+                --    SP_base viene en data.decode(15 downto 0)
+                --variable sp_base : unsigned(15 downto 0);
+
+                sp_base := unsigned(RecInWBAct.data.decode(15 downto 0));
+                sp_base := sp_base + 2;  -- solo aquí se suma 2
+
+                IdRegWB   <= std_logic_vector(to_unsigned(ID_SP, IdRegWB'length));
+                SizeRegWB <= RecInWBAct.datasize;
+                DataRegInWB <= (others => '0');
+                DataRegInWB(15 downto 0) <= std_logic_vector(sp_base);
+
+                EnableRegWB <= '1';
+                WAIT FOR 1 ns;
+                EnableRegWB <= '0';
+                WAIT FOR 1 ns;
+
+            else
+                ----------------------------------------------------------------
+                -- Resto de instrucciones: comportamiento original
+                ----------------------------------------------------------------
+                IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length));
+                SizeRegWB <= RecInWBAct.datasize;
+                DataRegInWB <= (others => '0');
+
+                CASE Source IS
+                    WHEN WB_ID =>
+                        for i in 0 to SizeBits-1 loop
+                            DataRegInWB(i) <= RecInWBAct.data.decode(i);
+                        end loop;
+                    WHEN WB_EX =>
+                        for i in 0 to SizeBits-1 loop
+                            DataRegInWB(i) <= RecInWBAct.data.execute(i);
+                        end loop;
+                    WHEN WB_MEM =>
+                        for i in 0 to SizeBits-1 loop
+                            DataRegInWB(i) <= RecInWBAct.data.memaccess(i);
+                        end loop;
+                    WHEN OTHERS =>
+                        report "Error: la configuración de la etapa de almacenamiento en registro no es válida"
+                        severity FAILURE;
+                END CASE;
+
+                EnableRegWB <= '1';
+                WAIT FOR 1 ns;
+                EnableRegWB <= '0';
+                WAIT FOR 1 ns;
+            end if;
+        end if;
+
 	END PROCESS Main; 
 	
-	
 end WRITEBACK_ARCHITECTURE;
-
-
-
-
-

@@ -203,23 +203,26 @@ architecture ETAPAS_ARCHITECTURE of etapas is
 	end component;
 	
 	component writeback
-		port (
-			DataRegInWB			: out std_logic_vector(31 downto 0);
-			IdRegWB				: out std_logic_vector(7 downto 0);
-			SizeRegWB			: out std_logic_vector(3 downto 0);
-			EnableRegWB			: out std_logic;
-			WbRegCheckWAW		: out writeback_record;
-			IdRegDecWrPend		: out std_logic_vector(7 downto 0);
-			DoneSTRW 			: out std_logic;
-			EnableCheckWAW		: out std_logic;
-			EnableDecWrPend		: out std_logic;
-			WbRegDoneWAW		: in  writeback_record;
-			DoneWAW				: in  std_logic;
-			StallWAW			: in  std_logic;
-			StallSTR			: in  std_logic;
-			RecInWB				: in  writeback_record;
-			EnableWB			: in  std_logic);  
+	    port (
+	        DataRegInWB         : out std_logic_vector(31 downto 0);
+	        IdRegWB             : out std_logic_vector(7 downto 0);
+	        SizeRegWB           : out std_logic_vector(3 downto 0);
+	        EnableRegWB         : out std_logic;
+	        WbRegCheckWAW       : out writeback_record;
+	        IdRegDecWrPend      : out std_logic_vector(7 downto 0);
+	        DoneSTRW            : out std_logic;
+	        EnableCheckWAW      : out std_logic;
+	        EnableDecWrPend     : out std_logic;
+	        WbRegDoneWAW        : in  writeback_record;
+	        DoneWAW             : in  std_logic;
+	        StallWAW            : in  std_logic;
+	        StallSTR            : in  std_logic;
+	        RecInWB             : in  writeback_record;
+	        EnableWB            : in  std_logic
+	    );
 	end component;
+
+
 	
 	
 	FOR UUT1: fetch USE ENTITY WORK.fetch(fetch_architecture);
@@ -328,22 +331,24 @@ begin
 			EnableMA			=> EnableMA);
 	
 	UUT5: writeback
-		port map (
-			DataRegInWB			=> DataRegInWB,
-			IdRegWB				=> IdRegWB,
-			SizeRegWB			=> SizeRegWB,
-			EnableRegWB			=> EnableRegWB,
-			WbRegCheckWAW		=> WbRegCheckWAW,
-			IdRegDecWrPend		=> IdRegDecWrPend,
-			DoneSTRW			=> DoneSTRW,
-			EnableCheckWAW		=> EnableCheckWAW,
-			EnableDecWrPend		=> EnableDecWrPend,
-			WbRegDoneWAW		=> WbRegDoneWAW,
-			DoneWAW				=> DoneWAW,
-			StallWAW			=> StallWAW,
-			StallSTR			=> StallSTR,
-			RecInWB				=> RecInWB,
-			EnableWB			=> EnableWB);
+    port map (
+        DataRegInWB         => DataRegInWB,
+        IdRegWB             => IdRegWB,
+        SizeRegWB           => SizeRegWB,
+        EnableRegWB         => EnableRegWB,
+        WbRegCheckWAW       => WbRegCheckWAW,
+        IdRegDecWrPend      => IdRegDecWrPend,
+        DoneSTRW            => DoneSTRW,
+        EnableCheckWAW      => EnableCheckWAW,
+        EnableDecWrPend     => EnableDecWrPend,
+        WbRegDoneWAW        => WbRegDoneWAW,
+        DoneWAW             => DoneWAW,
+        StallWAW            => StallWAW,
+        StallSTR            => StallSTR,
+        RecInWB             => RecInWB,
+        EnableWB            => EnableWB
+    );
+
 	
 	-- Add your stimulus here ...
 

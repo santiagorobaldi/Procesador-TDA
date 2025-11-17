@@ -1564,9 +1564,62 @@ begin
 			    IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
 
 			-------------------------------------------------------------------------------------------
-			WHEN POPH =>
-				WAIT FOR 1 ns;
-			
+        WHEN POPH =>
+            ----------------------------------------------------------------
+            -- POPH rd
+            -- 1) Lectura half-word desde [SP]  (etapa MA)
+            -- 2) En WB: escribir rd con el valor leído y SP con SP+2
+            --    (señalizado vía flag en data.decode(31) y SP_base en data.decode(15 downto 0))
+            ----------------------------------------------------------------
+
+            -- Configurar acceso de MEMORIA: lectura half-word desde [SP]
+            IDtoMA.mode     <= std_logic_vector(to_unsigned(MEM_MEM, IDtoMA.mode'length));
+            IDtoMA.read     <= '1';
+            IDtoMA.write    <= '0';
+            IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
+            IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
+
+            -- Dirección de lectura = SP (valor actual de SP)
+            IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
+            SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+            EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+
+            addrAux := to_integer(unsigned(DataRegOutID(15 downto 0)));  -- SP actual
+            IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
+
+            ----------------------------------------------------------------
+            -- Configurar WRITEBACK especial para POPH
+            --   - mode   = rN + 1 (como siempre)
+            --   - source = WB_MEM (dato viene de memoria)
+            --   - datasize = 2 (halfword)
+            --   - data.decode(31) = '1'  => flag POPH
+            --   - data.decode(15 downto 0) = SP_base (SP actual)
+            --
+            -- En WB se hará: SP_new = SP_base + 2
+            ----------------------------------------------------------------
+
+            -- rd destino: viene codificado en package1(7 downto 0)
+            rdAux := to_integer(unsigned(IFtoID.package1(7 downto 0))) + 1;  -- rN + 1
+
+            IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
+            IDtoWB.source   <= std_logic_vector(to_unsigned(WB_MEM, IDtoWB.source'length));
+            IDtoWB.mode     <= std_logic_vector(to_unsigned(rdAux, IDtoWB.mode'length));  -- IdRegWB = rdAux-1
+
+            -- Limpiar campos propios de ID/EX, pero SIN tocar memaccess
+            IDtoWB.data.decode      <= (others => '0');
+            IDtoWB.data.execute     <= (others => '0');
+            -- IMPORTANTE: NO PISAR data.memaccess:
+            -- NO pongas: IDtoWB.data.memaccess <= (others => '0');
+
+            -- Guardar SP base (SP actual) en data.decode(15 downto 0)
+            -- OJO: aquí va el SP ACTUAL, sin +2
+            IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
+
+            -- Flag POPH en bit 31
+            IDtoWB.data.decode(31) <= '1';
+
+
+	
 			-------------------------------------------------------------------------------------------
 			WHEN OTHERS =>
 				report "Error: el código de operación de la instrucción no es válido"
