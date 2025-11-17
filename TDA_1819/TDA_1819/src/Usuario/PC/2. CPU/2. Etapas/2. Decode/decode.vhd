@@ -122,7 +122,8 @@ begin
 		IDtoWB.id <= std_logic_vector(to_unsigned(idAux, IDtoWB.mode'length));
 		IDtoWB.datasize <= "ZZZZ";
 		IDtoWB.source <= std_logic_vector(to_unsigned(WB_NULL, IDtoWB.source'length));
-		IDtoWB.data.decode <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+		IDtoWB.data.decode <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"; 
+		IDtoWB.flag_poph <= '0';
 	End Initialize;	
 	
 	VARIABLE First:			BOOLEAN := true;
@@ -1615,8 +1616,8 @@ begin
             -- OJO: aquí va el SP ACTUAL, sin +2
             IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
 
-            -- Flag POPH en bit 31
-            IDtoWB.data.decode(31) <= '1';
+            -- Flag POPH
+            IDtoWB.flag_poph <= '1';
 
 
 	

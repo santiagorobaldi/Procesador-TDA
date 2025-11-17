@@ -95,6 +95,7 @@ begin
 			RecInWBAux.data.decode <= (others => 'Z');
 			RecInWBAux.data.execute<= (others => 'Z');
 			RecInWBAux.data.memaccess <= (others => 'Z');
+			RecInWBAux.flag_poph   <= '0';
 		END InitializeRecInWBAux;
 		
 		PROCEDURE InitializeRecInWBAux2 IS
@@ -106,6 +107,7 @@ begin
 			RecInWBAux2.data.decode <= (others => 'Z');
 			RecInWBAux2.data.execute<= (others => 'Z');
 			RecInWBAux2.data.memaccess <= (others => 'Z');
+			RecInWBAux.flag_poph   <= '0';
 		END InitializeRecInWBAux2;
 	
 	BEGIN 
@@ -235,7 +237,7 @@ begin
             SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8;
 
             -- Flag POPH: usamos bit 31 de data.decode
-            if (RecInWBAct.data.decode(31) = '1') then
+            if (RecInWBAct.flag_poph = '1')  then
                 ----------------------------------------------------------------
                 -- INSTRUCCIÓN POPH (penalizada en WB):
                 --   data.memaccess           = valor leido de pila (halfword)
@@ -245,7 +247,6 @@ begin
                 --   1) rN <= data.memaccess
                 --   2) SP <= SP_base + 2
                 ----------------------------------------------------------------
-
                 -- 1) Escritura de rN con valor de la pila
                 IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length)); -- Mode = rN+1
                 SizeRegWB <= RecInWBAct.datasize;

@@ -1,4 +1,4 @@
-Active-HDL 15.0.261.9132 2025-11-17 15:29:18
+Active-HDL 15.0.261.9132 2025-11-17 20:28:52
 
 Elaboration top modules:
 Architecture                  USUARIO_ARCHITECTURE(usuario)
@@ -52,12 +52,12 @@ float_pkg                                            | ieee_proposed |      | 15
 const_memoria                                        | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 tipos_ascii                                          | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 const_ascii                                          | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
+const_registros                                      | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 func_ensamblador                                     | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 tipos_memoria                                        | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 const_cpu                                            | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 const_flags                                          | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 const_reloj                                          | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
-const_registros                                      | tda_1819      |      | 15.0.261.9132 (Windows64) | -O3
 ------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-
 -- Entidad "ensamblador":
 -- Descripción: Aquí se define el ensamblador incluido en la PC para traducir el programa
 -- escrito por el usuario en el lenguaje Assembler a un código máquina que pueda ser
@@ -76,6 +75,7 @@ use TDA_1819.const_ascii.all;
 use TDA_1819.tipos_ensamblador.all; 
 use TDA_1819.tipos_cpu.all;
 use TDA_1819.tipos_ascii.all;
+use TDA_1819.const_registros.all;
 
 library ieee;
 use ieee.NUMERIC_STD.all;
@@ -85,8 +85,6 @@ use std.TEXTIO.all;
 
 library ieee_proposed;
 use ieee_proposed.float_pkg.all;
-
-	-- Add your library and packages declaration here ...
 
 entity ensamblador is
 	
@@ -117,16 +115,9 @@ end ensamblador;
 
 architecture ENSAMBLADOR_ARCHITECTURE of ensamblador is
 	
-	-- Component declaration of the tested unit
-	
-	-- Add your code here ...
-
 begin
 	
-	-- Add your stimulus here ...
-	
 	Main: PROCESS	  
-	
 	
 	PROCEDURE checkDataBegin(CONSTANT cadena: IN STRING; CONSTANT length: IN INTEGER; 
 							 CONSTANT nombre: IN STRING; CONSTANT num_linea: IN INTEGER) IS
@@ -827,20 +818,38 @@ begin
 	END checkCodeBegin;
 	
 	
-	PROCEDURE checkInstTd(CONSTANT variables: IN variable_records; CONSTANT cant_variables: IN INTEGER;
-						  CONSTANT cadena, INSTTD_NAME: IN STRING; CONSTANT INSTTD_CODE: STD_LOGIC_VECTOR(7 downto 0);
-						  CONSTANT INSTTD_SIZE: IN INTEGER; i: INOUT INTEGER; check: INOUT BOOLEAN;
-						  CONSTANT nombre: IN STRING; CONSTANT num_linea: IN INTEGER; CONSTANT addr_linea: IN INTEGER) IS
+	PROCEDURE checkInstTd(
+		CONSTANT variables     : IN  variable_records;
+		CONSTANT cant_variables: IN  INTEGER;
+		CONSTANT cadena        : IN  STRING;
+		CONSTANT INSTTD_NAME   : IN  STRING;
+		CONSTANT INSTTD_CODE   : IN  STD_LOGIC_VECTOR(7 downto 0);
+		CONSTANT INSTTD_SIZE   : IN  INTEGER;
+		i                      : INOUT INTEGER;
+		check                  : INOUT BOOLEAN;
+		CONSTANT nombre        : IN  STRING;
+		CONSTANT num_linea     : IN  INTEGER;
+		CONSTANT addr_linea    : IN  INTEGER
+	) IS
 	
-	VARIABLE match: BOOLEAN := true;
-	VARIABLE indice: INTEGER := i;
-	VARIABLE i_aux: INTEGER;
-	VARIABLE numReg1: INTEGER;
-	VARIABLE numReg2: INTEGER;
-	VARIABLE addrInm: INTEGER;
-	VARIABLE addrReg: INTEGER;
+		VARIABLE match    : BOOLEAN := true;
+		VARIABLE indice   : INTEGER := i;
+		VARIABLE i_aux    : INTEGER;
+		VARIABLE numReg1  : INTEGER;
+		VARIABLE numReg2  : INTEGER;
+		VARIABLE addrInm  : INTEGER;
+		VARIABLE addrReg  : INTEGER;
+		
+		-- Para lh/sh offset(sp)
+		VARIABLE is_minus    : BOOLEAN;
+		VARIABLE offset_val  : INTEGER;
+		VARIABLE digit       : INTEGER;
+		VARIABLE offset16    : UNSIGNED(15 downto 0);
 						   
 	BEGIN
+		------------------------------------------------------------------
+		-- Matchear el mnemónico
+		------------------------------------------------------------------
 		for j in INSTTD_NAME'RANGE loop
 			if (INSTTD_NAME(j) = ' ') then
 				exit;
@@ -851,7 +860,9 @@ begin
 			end if;
 			indice := indice + 1;
 		end loop;
+
 		if (match) then
+			-- Espacio después del mnemónico
 			if (cadena(indice) /= ' ') then
 				check := false;
 				return;
@@ -859,24 +870,35 @@ begin
 			while (cadena(indice) = ' ') loop
 				indice := indice + 1;
 			end loop;
+
+			------------------------------------------------------------------
+			-- Primer operando: registro destino/origen
+			------------------------------------------------------------------
 			if (((INSTTD_SIZE = 6) and (INSTTD_NAME(2) /= 'f')) or (INSTTD_NAME = "mrf")) then
+				-- TD con registros enteros (lb/sb/lh/sh/lw/sw/lf/sf/mrf)
 				if (cadena(indice) /= 'r') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+					report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+					       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 					severity FAILURE;
 				end if;
 				numReg1 := 0;
 			else
+				-- TD con registros de punto flotante (mff, etc.)
 				if (cadena(indice) /= 'f') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+					report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+					       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 					severity FAILURE;
 				end if;
 				numReg1 := CANT_REGISTROS;
 			end if;
+
 			indice := indice + 1;
 			if (not isNumber(cadena(indice))) then
-				report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+				report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+				       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 				severity FAILURE;
 			end if;
+
 			for j in DIGITS_DEC'range loop
 				if (cadena(indice) = DIGITS_DEC(j)) then
 					numReg1 := numReg1 + j-1;
@@ -884,9 +906,12 @@ begin
 				end if;
 			end loop;
 			indice := indice + 1;
+
+			-- posible segundo dígito (r10..r15 / f10..f15)
 			if (cadena(indice) /= ',') then
 				if (cadena(indice-1) /= '1') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+					report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+					       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 					severity FAILURE;
 				end if;
 				case cadena(indice) is
@@ -903,144 +928,351 @@ begin
 						end loop;
 						indice := indice + 1;
 					when others =>
-						report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 						severity FAILURE;
 				end case;
 			end if;
+
 			if (cadena(indice) /= ',') then
-				report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
+				report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+				       trim(nombre) & "': el primer operando se encuentra incorrectamente declarado"
 				severity FAILURE;
 			end if;
+
 			indice := indice + 1;
 			if (cadena(indice) /= ' ') then
-				report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+				report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+				       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 				severity FAILURE;	
 			end if;
 			indice := indice + 1; 
+
+			------------------------------------------------------------------
+			-- CASO 1: TD de 6 bytes (lb/sb/lh/sh/lw/sw/lf/sf)
+			--         Separamos:
+			--           - lh/sh:    offset(sp)
+			--           - otras TD: var(rN) (formato original)
+			------------------------------------------------------------------
 			if (INSTTD_SIZE = 6) then
-				for j in 1 to cant_variables loop
-					match := true;
-					i_aux := indice;
-					for k in 1 to variables(j).namelength loop
-						if (cadena(i_aux) /= variables(j).name(k)) then
-							match := false;
-							exit;
-						end if;
-						i_aux := i_aux + 1;
-					end loop;
-					if (match) then
-						addrInm := variables(j).address;
-						indice := indice + variables(j).namelength;
-						exit;
-					end if;
-				end loop; 
-				--indice := indice + 1;
-				if (not match) then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando no hace referencia al nombre de ninguna variable válida declarada"
-					severity FAILURE;
-				end if;
-				if (cadena(indice) /= '(') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
-					severity FAILURE;
-				end if;
-				indice := indice + 1;
-				if (cadena(indice) /= 'r') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
-					severity FAILURE;
-				end if;
-				indice := indice + 1;
-				if (not isNumber(cadena(indice))) then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
-					severity FAILURE;
-				end if;
-				for j in DIGITS_DEC'range loop
-					if (cadena(indice) = DIGITS_DEC(j)) then
-						addrReg := j-1;
-						exit;
-					end if;
-				end loop;
-				indice := indice + 1;
-				if (cadena(indice) /= ')') then
-					if (cadena(indice-1) /= '1') then
-						report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+
+				------------------------------------------------------------------
+				-- CASO 1.a: lh / sh con sintaxis offset(sp)
+				--    ej: lh r2, -2(sp)
+				--        sh r3, 4(sp)
+				------------------------------------------------------------------
+				if ((INSTTD_NAME = "lh ") or (INSTTD_NAME = "sh ")) then
+
+					-- offset: número decimal con signo opcional
+					if (not isNumberOrMinus(cadena(indice))) then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el desplazamiento del segundo operando no es válido"
 						severity FAILURE;
 					end if;
-					case cadena(indice) is
-						when '0' to '5' =>
-							for j in DIGITS_DEC'range loop
-								if (cadena(indice) = DIGITS_DEC(j)) then
-									addrReg := 10 + j-1;
-									exit;
-								end if;
-							end loop;
-							indice := indice + 1;
-						when others =>
-							report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+
+					if (isMinus(cadena(indice))) then
+						is_minus := true;
+						indice   := indice + 1;
+					else
+						is_minus := false;
+					end if;
+
+					if (not isNumber(cadena(indice))) then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el desplazamiento del segundo operando no es válido"
+						severity FAILURE;
+					end if;
+
+					offset_val := 0;
+					while (isNumber(cadena(indice))) loop
+						-- convertir dígito
+						digit := -1;
+						for j in DIGITS_DEC'RANGE loop
+							if (cadena(indice) = DIGITS_DEC(j)) then
+								digit := j-1;
+								exit;
+							end if;
+						end loop;
+						if (digit < 0) then
+							report "Error interno en conversión de dígito (offset lh/sh)"
 							severity FAILURE;
-					end case;
-				end if;
-				if (cadena(indice) /= ')') then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
-					severity FAILURE;
-				end if;
-				indice := indice + 1;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
-				InstDataBusOutComp <= std_logic_vector(to_unsigned(INSTTD_SIZE, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY; 
-				EnableCompToInstMem <= '1';
-				WAIT FOR 1 ns;
-				EnableCompToInstMem <= '0';	
-				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+1, InstAddrBusComp'length));
-				InstDataBusOutComp <= "ZZZZZZZZZZZZZZZZZZZZZZZZ" & INSTTD_CODE;
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
-				EnableCompToInstMem <= '1';
-				WAIT FOR 1 ns;
-				EnableCompToInstMem <= '0';
-				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+2, InstAddrBusComp'length));
-				InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
-				EnableCompToInstMem <= '1';
-				WAIT FOR 1 ns;
-				EnableCompToInstMem <= '0';	
-				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+3, InstAddrBusComp'length));
-				InstDataBusOutComp <= std_logic_vector(to_unsigned(addrInm, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(2, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
-				EnableCompToInstMem <= '1';
-				WAIT FOR 1 ns;
-				EnableCompToInstMem <= '0'; 
-				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+5, InstAddrBusComp'length));
-				InstDataBusOutComp <= std_logic_vector(to_unsigned(addrReg, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
-				EnableCompToInstMem <= '1';
-				WAIT FOR 1 ns;
-				EnableCompToInstMem <= '0';
-				WAIT FOR 1 ns; 
+						end if;
+						offset_val := offset_val * 10 + digit;
+						indice     := indice + 1;
+					end loop;
+
+					if (is_minus) then
+						offset_val := -offset_val;
+					end if;
+
+					-- Limitación opcional a 16 bits
+					if (offset_val < -32768 or offset_val > 32767) then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el desplazamiento del segundo operando excede los 16 bits"
+						severity FAILURE;
+					end if;
+
+					-- Debe venir "("
+					if (cadena(indice) /= '(') then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+					indice := indice + 1;
+
+					-- Debe ser "sp" o "SP"
+					if (not ((cadena(indice) = 's') or (cadena(indice) = 'S'))) then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el registro base debe ser sp"
+						severity FAILURE;
+					end if;
+					if (not ((cadena(indice+1) = 'p') or (cadena(indice+1) = 'P'))) then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el registro base debe ser sp"
+						severity FAILURE;
+					end if;
+
+					addrReg := ID_SP;
+					indice  := indice + 2;
+
+					if (cadena(indice) /= ')') then
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+					indice := indice + 1;
+
+					-- Codificación del offset como entero de 16 bits (complemento a dos)
+					if (offset_val < 0) then
+						offset16 := to_unsigned(2**16 + offset_val, 16);
+					else
+						offset16 := to_unsigned(offset_val, 16);
+					end if;
+
+					------------------------------------------------------------------
+					-- Generación de código máquina: 6 bytes
+					--  byte 0: tamaño (6)
+					--  byte 1: opcode
+					--  byte 2: numReg1
+					--  bytes 3-4: offset (16 bits)
+					--  byte 5: addrReg = ID_SP
+					------------------------------------------------------------------
+					-- Byte 0
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(INSTTD_SIZE, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY; 
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';	
+					WAIT FOR 1 ns;
+
+					-- Byte 1
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+1, InstAddrBusComp'length));
+					InstDataBusOutComp <= (others => '0');
+					InstDataBusOutComp(7 downto 0) <= INSTTD_CODE;
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';
+					WAIT FOR 1 ns;
+
+					-- Byte 2: registro
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+2, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';	
+					WAIT FOR 1 ns;
+
+					-- Bytes 3-4: offset
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+3, InstAddrBusComp'length));
+					InstDataBusOutComp <= (others => '0');
+					InstDataBusOutComp(15 downto 0) <= std_logic_vector(offset16);
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(2, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0'; 
+					WAIT FOR 1 ns;
+
+					-- Byte 5: addrReg = SP
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+5, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(addrReg, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';
+					WAIT FOR 1 ns; 
+
+				------------------------------------------------------------------
+				-- CASO 1.b: resto de TD de 6 bytes con sintaxis var(rN)
+				------------------------------------------------------------------
+				else
+					-- Buscar nombre de variable
+					for j in 1 to cant_variables loop
+						match := true;
+						i_aux := indice;
+						for k in 1 to variables(j).namelength loop
+							if (cadena(i_aux) /= variables(j).name(k)) then
+								match := false;
+								exit;
+							end if;
+							i_aux := i_aux + 1;
+						end loop;
+						if (match) then
+							addrInm := variables(j).address;
+							indice  := indice + variables(j).namelength;
+							exit;
+						end if;
+					end loop; 
+
+					if (not match) then
+						report "Error en la línea " & integer'image(num_linea) &
+							   " del programa '" & trim(nombre) &
+							   "': el segundo operando no hace referencia al nombre de ninguna variable válida declarada"
+						severity FAILURE;
+					end if;
+
+					-- Debe venir "("
+					if (cadena(indice) /= '(') then
+						report "Error en la línea " & integer'image(num_linea) &
+							   " del programa '" & trim(nombre) &
+							   "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+					indice := indice + 1;
+
+					-- Registro base: rN (formato original)
+					if (cadena(indice) /= 'r') then
+						report "Error en la línea " & integer'image(num_linea) & 
+							   " del programa '" & trim(nombre) & 
+							   "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+					indice := indice + 1;
+
+					if (not isNumber(cadena(indice))) then
+						report "Error en la línea " & integer'image(num_linea) & 
+							   " del programa '" & trim(nombre) & 
+							   "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+
+					for j in DIGITS_DEC'range loop
+						if (cadena(indice) = DIGITS_DEC(j)) then
+							addrReg := j-1;
+							exit;
+						end if;
+					end loop;
+					indice := indice + 1;
+
+					if (cadena(indice) /= ')') then
+						if (cadena(indice-1) /= '1') then
+							report "Error en la línea " & integer'image(num_linea) & 
+								   " del programa '" & trim(nombre) & 
+								   "': el segundo operando se encuentra incorrectamente declarado"
+							severity FAILURE;
+						end if;
+						case cadena(indice) is
+							when '0' to '5' =>
+								for j in DIGITS_DEC'range loop
+									if (cadena(indice) = DIGITS_DEC(j)) then
+										addrReg := 10 + j-1;
+										exit;
+									end if;
+								end loop;
+								indice := indice + 1;
+							when others =>
+								report "Error en la línea " & integer'image(num_linea) & 
+									   " del programa '" & trim(nombre) & 
+									   "': el segundo operando se encuentra incorrectamente declarado"
+								severity FAILURE;
+						end case;
+					end if;
+
+					if (cadena(indice) /= ')') then
+						report "Error en la línea " & integer'image(num_linea) & 
+							   " del programa '" & trim(nombre) & 
+							   "': el segundo operando se encuentra incorrectamente declarado"
+						severity FAILURE;
+					end if;
+					indice := indice + 1;
+
+					-- Generación de código igual que antes (dirección absoluta + registro base)
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(INSTTD_SIZE, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY; 
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';	
+					WAIT FOR 1 ns;
+
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+1, InstAddrBusComp'length));
+					InstDataBusOutComp <= "ZZZZZZZZZZZZZZZZZZZZZZZZ" & INSTTD_CODE;
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';
+					WAIT FOR 1 ns;
+
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+2, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';	
+					WAIT FOR 1 ns;
+
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+3, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(addrInm, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(2, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0'; 
+					WAIT FOR 1 ns;
+
+					InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+5, InstAddrBusComp'length));
+					InstDataBusOutComp <= std_logic_vector(to_unsigned(addrReg, InstDataBusOutComp'length));
+					InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+					InstCtrlBusComp    <= WRITE_MEMORY;
+					EnableCompToInstMem <= '1';
+					WAIT FOR 1 ns;
+					EnableCompToInstMem <= '0';
+					WAIT FOR 1 ns; 
+				end if;  -- fin lh/sh vs resto TD de 6 bytes
+
+			------------------------------------------------------------------
+			-- CASO 2: TD de 4 bytes (mff/mfr/mrf/tf/ti) – igual que original
+			------------------------------------------------------------------
 			else
 				if (INSTTD_NAME /= "mfr") then
 					if (cadena(indice) /= 'f') then
-						report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 						severity FAILURE;
 					end if;
 					numReg2 := CANT_REGISTROS;
 				else
 					if (cadena(indice) /= 'r') then
-						report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 						severity FAILURE;
 					end if;
 					numReg2 := 0;
 				end if;
 				indice := indice + 1;
 				if (not isNumber(cadena(indice))) then
-					report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+					report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+					       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 					severity FAILURE;
 				end if;
 				for j in DIGITS_DEC'range loop
@@ -1052,7 +1284,8 @@ begin
 				indice := indice + 1;
 				if (cadena(indice) /= ' ') then
 					if (cadena(indice-1) /= '1') then
-						report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+						report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+						       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 						severity FAILURE;
 					end if;
 					case cadena(indice) is
@@ -1069,49 +1302,56 @@ begin
 							end loop;
 							indice := indice + 1;
 						when others =>
-							report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
+							report "Error en la línea " & integer'image(num_linea) & " del programa '" &
+							       trim(nombre) & "': el segundo operando se encuentra incorrectamente declarado"
 							severity FAILURE;
 					end case; 
 				end if;				
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
+
+				InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
 				InstDataBusOutComp <= std_logic_vector(to_unsigned(INSTTD_SIZE, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY; 
+				InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+				InstCtrlBusComp    <= WRITE_MEMORY; 
 				EnableCompToInstMem <= '1';
 				WAIT FOR 1 ns;
 				EnableCompToInstMem <= '0';	
 				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+1, InstAddrBusComp'length));
+
+				InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+1, InstAddrBusComp'length));
 				InstDataBusOutComp <= "ZZZZZZZZZZZZZZZZZZZZZZZZ" & INSTTD_CODE;
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
+				InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+				InstCtrlBusComp    <= WRITE_MEMORY;
 				EnableCompToInstMem <= '1';
 				WAIT FOR 1 ns;
 				EnableCompToInstMem <= '0';
 				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+2, InstAddrBusComp'length));
+
+				InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+2, InstAddrBusComp'length));
 				InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
+				InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+				InstCtrlBusComp    <= WRITE_MEMORY;
 				EnableCompToInstMem <= '1';
 				WAIT FOR 1 ns;
 				EnableCompToInstMem <= '0';	
 				WAIT FOR 1 ns;
-				InstAddrBusComp <= std_logic_vector(to_unsigned(addr_linea+3, InstAddrBusComp'length));
+
+				InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea+3, InstAddrBusComp'length));
 				InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg2, InstDataBusOutComp'length));
-				InstSizeBusComp <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-				InstCtrlBusComp <= WRITE_MEMORY;
+				InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+				InstCtrlBusComp    <= WRITE_MEMORY;
 				EnableCompToInstMem <= '1';
 				WAIT FOR 1 ns;
 				EnableCompToInstMem <= '0'; 
 				WAIT FOR 1 ns;
-			end if;
-			i := indice;
+			end if; -- fin caso INSTTD_SIZE
+
+			i     := indice;
 			check := true;
 		else
 			check := false;
 		end if;
 	END checkInstTd;
+
 	
 	
 	PROCEDURE checkInstAr(CONSTANT cadena, INSTAR_NAME: IN STRING; 
@@ -1875,153 +2115,136 @@ begin
 		end if;
 	END checkInstLD; 
 	
-	PROCEDURE checkInstMdp(
-    CONSTANT cadena      : IN STRING;
-    CONSTANT INSMDP_NAME : IN STRING;
-    CONSTANT INSMDP_CODE : IN STD_LOGIC_VECTOR(7 downto 0);
-    CONSTANT INSMDP_SIZE : IN INTEGER;
-    i                    : INOUT INTEGER;
-    check                : INOUT BOOLEAN;
-    CONSTANT nombre      : IN STRING;
-    CONSTANT num_linea   : IN INTEGER;
-    CONSTANT addr_linea  : IN INTEGER
-) IS
-    VARIABLE match   : BOOLEAN := true;
-    VARIABLE indice  : INTEGER := i;
-    VARIABLE numReg1 : INTEGER;
-BEGIN
-    --------------------------------------------------------------------
-    -- 1) Matchear el mnemónico (pushh / poph)
-    --------------------------------------------------------------------
-    FOR j IN INSMDP_NAME'RANGE LOOP
-        -- Se permite que el nombre en la tabla esté rellenado con espacios
-        IF (INSMDP_NAME(j) = ' ') THEN
-            EXIT;
-        END IF;
-
-        IF (cadena(indice) /= INSMDP_NAME(j)) THEN
-            match := false;
-            EXIT;
-        END IF;
-
-        indice := indice + 1;
-    END LOOP;
-
-    -- Si no matchea el mnemónico, este procedimiento "no aplica"
-    IF (NOT match) THEN
-        check := false;
-        RETURN;
-    END IF;
-
-    --------------------------------------------------------------------
-    -- 2) Debe venir al menos un espacio
-    --------------------------------------------------------------------
-    IF (cadena(indice) /= ' ') THEN
-        report "Error en la línea " & integer'image(num_linea) &
-               " del programa '" & trim(nombre) &
-               "': falta un espacio luego del mnemónico de la instrucción"
-        severity FAILURE;
-    END IF;
-
-    -- Consumir todos los espacios
-    WHILE (cadena(indice) = ' ') LOOP
-        indice := indice + 1;
-    END LOOP;
-
-    --------------------------------------------------------------------
-    -- 3) Operando: rN   (solo registros enteros r0..r15)
-    --------------------------------------------------------------------
-    IF (cadena(indice) /= 'r') THEN
-        report "Error en la línea " & integer'image(num_linea) &
-               " del programa '" & trim(nombre) &
-               "': el operando se encuentra incorrectamente declarado"
-        severity FAILURE;
-    END IF;
-
-    numReg1 := 0;
-    indice  := indice + 1;
-
-    -- Primer dígito del número de registro
-    IF (NOT isNumber(cadena(indice))) THEN
-        report "Error en la línea " & integer'image(num_linea) &
-               " del programa '" & trim(nombre) &
-               "': el operando se encuentra incorrectamente declarado"
-        severity FAILURE;
-    END IF;
-
-    FOR j IN DIGITS_DEC'RANGE LOOP
-        IF (cadena(indice) = DIGITS_DEC(j)) THEN
-            numReg1 := numReg1 + j - 1;
-            EXIT;
-        END IF;
-    END LOOP;
-
-    indice := indice + 1;
-
-    -- Posible segundo dígito para r10..r15
-    IF (cadena(indice-1) = '1') THEN
-        CASE cadena(indice) IS
-            WHEN '0' TO '5' =>
-                FOR j IN DIGITS_DEC'RANGE LOOP
-                    IF (cadena(indice) = DIGITS_DEC(j)) THEN
-                        numReg1 := 10 + j - 1;
-                        EXIT;
-                    END IF;
-                END LOOP;
-                indice := indice + 1;
-            WHEN OTHERS =>
-                NULL;  -- si no es 0..5, entonces era r1 y listo
-        END CASE;
-    END IF;
-
-    -- Podrías agregar aquí chequeo de caracteres extra si querés ser más estricto
-    -- (por ejemplo, que luego del operando solo haya espacios)
-
-    --------------------------------------------------------------------
-    -- 4) Generación de código máquina (3 bytes)
-    --    byte 0: tamaño de la instrucción (INSMDP_SIZE = 3)
-    --    byte 1: opcode (INSMDP_CODE)
-    --    byte 2: número de registro (numReg1)
-    --------------------------------------------------------------------
-    -- Byte 0: tamaño
-    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
-    InstDataBusOutComp <= std_logic_vector(to_unsigned(INSMDP_SIZE, InstDataBusOutComp'length));
-    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-    InstCtrlBusComp    <= WRITE_MEMORY;
-    EnableCompToInstMem <= '1';
-    WAIT FOR 1 ns;
-    EnableCompToInstMem <= '0';
-    WAIT FOR 1 ns;
-
-    -- Byte 1: opcode
-    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 1, InstAddrBusComp'length));
-    InstDataBusOutComp <= (OTHERS => '0');
-    InstDataBusOutComp(7 downto 0) <= INSMDP_CODE;
-    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-    InstCtrlBusComp    <= WRITE_MEMORY;
-    EnableCompToInstMem <= '1';
-    WAIT FOR 1 ns;
-    EnableCompToInstMem <= '0';
-    WAIT FOR 1 ns;
-
-    -- Byte 2: número de registro
-    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 2, InstAddrBusComp'length));
-    InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
-    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
-    InstCtrlBusComp    <= WRITE_MEMORY;
-    EnableCompToInstMem <= '1';
-    WAIT FOR 1 ns;
-    EnableCompToInstMem <= '0';
-    WAIT FOR 1 ns;
-
-    --------------------------------------------------------------------
-    -- 5) Actualizar índice y flag de éxito
-    --------------------------------------------------------------------
-    i     := indice;
-    check := true;
-END checkInstMdp;
-
 	
+	PROCEDURE checkInstMdp(
+	    CONSTANT cadena      : IN STRING;
+	    CONSTANT INSMDP_NAME : IN STRING;
+	    CONSTANT INSMDP_CODE : IN STD_LOGIC_VECTOR(7 downto 0);
+	    CONSTANT INSMDP_SIZE : IN INTEGER;
+	    i                    : INOUT INTEGER;
+	    check                : INOUT BOOLEAN;
+	    CONSTANT nombre      : IN STRING;
+	    CONSTANT num_linea   : IN INTEGER;
+	    CONSTANT addr_linea  : IN INTEGER
+	) IS
+	    VARIABLE match   : BOOLEAN := true;
+	    VARIABLE indice  : INTEGER := i;
+	    VARIABLE numReg1 : INTEGER;
+	BEGIN
+	    -- 1) Matchear el mnemónico (pushh / poph)
+	    FOR j IN INSMDP_NAME'RANGE LOOP
+	        IF (INSMDP_NAME(j) = ' ') THEN
+	            EXIT;
+	        END IF;
+	
+	        IF (cadena(indice) /= INSMDP_NAME(j)) THEN
+	            match := false;
+	            EXIT;
+	        END IF;
+	
+	        indice := indice + 1;
+	    END LOOP;
+	
+	    -- Si no matchea el mnemónico, este procedimiento "no aplica"
+	    IF (NOT match) THEN
+	        check := false;
+	        RETURN;
+	    END IF;
+	
+	    -- 2) Debe venir al menos un espacio
+	    IF (cadena(indice) /= ' ') THEN
+	        report "Error en la línea " & integer'image(num_linea) &
+	               " del programa '" & trim(nombre) &
+	               "': falta un espacio luego del mnemónico de la instrucción"
+	        severity FAILURE;
+	    END IF;
+	
+	    -- Consumir todos los espacios
+	    WHILE (cadena(indice) = ' ') LOOP
+	        indice := indice + 1;
+	    END LOOP;
+	
+	    -- 3) Operando: rN   (solo registros enteros r0..r15)
+	    IF (cadena(indice) /= 'r') THEN
+	        report "Error en la línea " & integer'image(num_linea) &
+	               " del programa '" & trim(nombre) &
+	               "': el operando se encuentra incorrectamente declarado"
+	        severity FAILURE;
+	    END IF;
+	
+	    numReg1 := 0;
+	    indice  := indice + 1;
+	
+	    -- Primer dígito del número de registro
+	    IF (NOT isNumber(cadena(indice))) THEN
+	        report "Error en la línea " & integer'image(num_linea) &
+	               " del programa '" & trim(nombre) &
+	               "': el operando se encuentra incorrectamente declarado"
+	        severity FAILURE;
+	    END IF;
+	
+	    FOR j IN DIGITS_DEC'RANGE LOOP
+	        IF (cadena(indice) = DIGITS_DEC(j)) THEN
+	            numReg1 := numReg1 + j - 1;
+	            EXIT;
+	        END IF;
+	    END LOOP;
+	
+	    indice := indice + 1;
+	
+	    -- Posible segundo dígito para r10..r15
+	    IF (cadena(indice-1) = '1') THEN
+	        CASE cadena(indice) IS
+	            WHEN '0' TO '5' =>
+	                FOR j IN DIGITS_DEC'RANGE LOOP
+	                    IF (cadena(indice) = DIGITS_DEC(j)) THEN
+	                        numReg1 := 10 + j - 1;
+	                        EXIT;
+	                    END IF;
+	                END LOOP;
+	                indice := indice + 1;
+	            WHEN OTHERS =>
+	                NULL;  -- si no es 0..5, entonces era r1 y listo
+	        END CASE;
+	    END IF;
+	
+	    -- 4) Generación de código máquina (3 bytes)
+	    -- Byte 0: tamaño
+	    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea, InstAddrBusComp'length));
+	    InstDataBusOutComp <= std_logic_vector(to_unsigned(INSMDP_SIZE, InstDataBusOutComp'length));
+	    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+	    InstCtrlBusComp    <= WRITE_MEMORY;
+	    EnableCompToInstMem <= '1';
+	    WAIT FOR 1 ns;
+	    EnableCompToInstMem <= '0';
+	    WAIT FOR 1 ns;
+	
+	    -- Byte 1: opcode
+	    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 1, InstAddrBusComp'length));
+	    InstDataBusOutComp <= (OTHERS => '0');
+	    InstDataBusOutComp(7 downto 0) <= INSMDP_CODE;
+	    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+	    InstCtrlBusComp    <= WRITE_MEMORY;
+	    EnableCompToInstMem <= '1';
+	    WAIT FOR 1 ns;
+	    EnableCompToInstMem <= '0';
+	    WAIT FOR 1 ns;
+	
+	    -- Byte 2: número de registro
+	    InstAddrBusComp    <= std_logic_vector(to_unsigned(addr_linea + 2, InstAddrBusComp'length));
+	    InstDataBusOutComp <= std_logic_vector(to_unsigned(numReg1, InstDataBusOutComp'length));
+	    InstSizeBusComp    <= std_logic_vector(to_unsigned(1, InstSizeBusComp'length));
+	    InstCtrlBusComp    <= WRITE_MEMORY;
+	    EnableCompToInstMem <= '1';
+	    WAIT FOR 1 ns;
+	    EnableCompToInstMem <= '0';
+	    WAIT FOR 1 ns;
+	
+	    -- 5) Actualizar índice y flag de éxito
+	    i     := indice;
+	    check := true;
+	END checkInstMdp;
+
 	
 	PROCEDURE checkInstTc(offsets: INOUT offset_records; cant_offsets: INOUT INTEGER;
 						  CONSTANT cadena, INSTTC_NAME: IN STRING; CONSTANT INSTTC_CODE: STD_LOGIC_VECTOR(7 downto 0);
@@ -2316,6 +2539,11 @@ END checkInstMdp;
 		while (cadena(i) = HT) loop
 			i := i + 1;
 		end loop;
+
+		-- Inicializar el flag
+		check := false;
+
+		-- 1) Instrucciones de transferencia de datos (lb, lh, sh, etc.)
 		for j in INSTTD_NAMES'RANGE loop
 			checkInstTd(variables, cant_variables, cadena, INSTTD_NAMES(j), INSTTD_CODES(j), INSTTD_SIZES(j), i, check, nombre, num_linea, addr_linea);
 			if (check) then	
@@ -2327,26 +2555,23 @@ END checkInstMdp;
 			end if;
 		end loop;	
 		
+		-- 2) Instrucciones de manejo de pila (pushh / poph)
+		if (not check) then
+			for j in INSMDP_NAMES'RANGE loop
+				checkInstMdp(cadena, INSMDP_NAMES(j), INSMDP_CODES(j),
+							 INSMDP_SIZES(j), i, check,
+							 nombre, num_linea, addr_linea);
+				if (check) then
+					addr_linea := addr_linea + INSMDP_SIZES(j);
+					for k in INSMDP_NAMES(j)'RANGE loop
+						CompToSM.name_inst(k) <= INSMDP_NAMES(j)(k);
+					end loop;
+					exit;
+				end if;
+			end loop;
+		end if;
 		
-		 -- ============================================================
-        --  NUEVO GRUPO: Manejo de la Pila (pushh/poph)
-        -- ============================================================
-        for j in INSMDP_NAMES'RANGE loop
-            checkInstMdp(cadena, INSMDP_NAMES(j), INSMDP_CODES(j),
-                          INSMDP_SIZES(j), i, check,
-                          nombre, num_linea, addr_linea);
-
-            if (check) then
-                addr_linea := addr_linea + INSMDP_SIZES(j);
-
-                for k in INSMDP_NAMES(j)'RANGE loop
-                    CompToSM.name_inst(k) <= INSMDP_NAMES(j)(k);
-                end loop;
-
-                exit;   -- ya se reconoció una instrucción MDP
-            end if;
-        end loop;
-		
+		-- 3) Instrucciones aritméticas
 		if (not check) then
 			for j in INSTAR_NAMES'RANGE loop
 				checkInstAr(cadena, INSTAR_NAMES(j), INSTAR_CODES(j), INSTAR_SIZES(j), i, check, nombre, num_linea, addr_linea);
@@ -2359,6 +2584,8 @@ END checkInstMdp;
 				end if;
 			end loop;
 		end if;
+
+		-- 4) Instrucciones lógicas / desplazamiento
 		if (not check) then
 			for j in INSTLD_NAMES'RANGE loop
 				checkInstLD(cadena, INSTLD_NAMES(j), INSTLD_CODES(j), INSTLD_SIZES(j), i, check, nombre, num_linea, addr_linea);
@@ -2371,18 +2598,22 @@ END checkInstMdp;
 				end if;
 			end loop;
 		end if;
+
+		-- 5) Instrucciones de transferencia de control
 		if (not check) then
 			for j in INSTTC_NAMES'RANGE loop
 				checkInstTc(offsets, cant_offsets, cadena, INSTTC_NAMES(j), INSTTC_CODES(j), INSTTC_SIZES(j), i, check, nombre, num_linea, addr_linea);
 				if (check) then	
 					addr_linea := addr_linea + INSTTC_SIZES(j);
 					for k in INSTTC_NAMES(j)'RANGE loop
-					CompToSM.name_inst(k) <= INSTTC_NAMES(j)(k);
-				end loop;
+						CompToSM.name_inst(k) <= INSTTC_NAMES(j)(k);
+					end loop;
 					exit;
 				end if;
 			end loop;
 		end if;
+
+		-- 6) Instrucciones de control del procesador (halt, etc.)
 		if (not check) then
 			for j in INSTCT_NAMES'RANGE loop
 				checkInstCt(cadena, INSTCT_NAMES(j), INSTCT_CODES(j), INSTCT_SIZES(j), i, check, is_halt, addr_linea);
@@ -2395,10 +2626,12 @@ END checkInstMdp;
 				end if;
 			end loop;
 		end if;
+
 		if (not check) then
 			report "Error en la línea " & integer'image(num_linea) & " del programa '" & trim(nombre) & "': la instrucción declarada no es válida"
 			severity FAILURE;
 		end if;
+
 		while (cadena(i) = HT) loop
 			i := i + 1;
 		end loop;
@@ -2572,9 +2805,4 @@ END checkInstMdp;
 		WAIT;
 	END PROCESS Main;
 
-
-
 end ENSAMBLADOR_ARCHITECTURE;
-
-
-

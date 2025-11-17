@@ -96,6 +96,7 @@ PACKAGE tipos_cpu is
 		datasize: std_logic_vector(3 downto 0);
 		source: std_logic_vector(3 downto 0);
 		data: writeback_data;
+		flag_poph : std_logic;  -- NUEVO: flag exclusivo para POPH
 	END RECORD;
 	
 	TYPE execute_records IS ARRAY (NATURAL RANGE <>) OF execute_record;
