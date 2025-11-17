@@ -1,17 +1,17 @@
-.\src\Packages\const_reloj.vhd
 .\src\Packages\tipos_cpu.vhd
 .\src\Packages\tipos_memoria.vhd
-.\src\Packages\const_memoria.vhd
-.\src\Packages\const_registros.vhd
-.\src\Packages\const_flags.vhd
-.\src\Packages\const_buses.vhd
-.\src\Packages\const_cpu.vhd
 .\src\Packages\tipos_ensamblador.vhd
+.\src\Packages\const_registros.vhd
 .\src\Packages\repert_cpu.vhd
 .\src\Packages\tipos_ascii.vhd
+.\src\Packages\const_reloj.vhd
+.\src\Packages\const_cpu.vhd
+.\src\Packages\const_flags.vhd
+.\src\Packages\const_memoria.vhd
+.\src\Packages\const_buses.vhd
 .\src\Packages\const_ascii.vhd
-.\src\Packages\func_ensamblador.vhd
 .\src\Packages\const_ensamblador.vhd
+.\src\Packages\func_ensamblador.vhd
 .\src\Usuario\usuario.vhd
 .\src\Usuario\PC\pc.vhd
 .\src\Usuario\PC\1. Ensamblador\ensamblador.vhd

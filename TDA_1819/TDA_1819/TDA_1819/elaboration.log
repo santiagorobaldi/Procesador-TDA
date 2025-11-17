@@ -1,4 +1,4 @@
-Active-HDL 15.0.261.9132 2025-11-17 01:27:53
+Active-HDL 15.0.261.9132 2025-11-17 12:50:07
 
 Elaboration top modules:
 Architecture                  USUARIO_ARCHITECTURE(usuario)
@@ -68,9 +68,3 @@ ieee_proposed                                        | VHDL '93 compatible versi
 std                                                  | Standard VHDL library
 tda_1819                                             | None
 --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-Simulation Options: asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
-
-
-The performance of simulation is reduced. Version Student Edition

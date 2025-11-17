@@ -1536,8 +1536,33 @@ begin
 			
 			-------------------------------------------------------------------------------------------
 			WHEN PUSHH =>
-				WAIT FOR 1 ns;	 
+			    -- 1) Configurar acceso de MEMORIA: write half-word
+			    IDtoMA.mode     <= std_logic_vector(to_unsigned(MEM_MEM, IDtoMA.mode'length));
+			    IDtoMA.write    <= '1';
+			    IDtoMA.read     <= '0';
+			    IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
+			    IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
 			
+			    -- 2) Dato a escribir = 16 LSB de rf
+			    rfAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0)));
+			    IdRegID   <= std_logic_vector(to_unsigned(rfAux, IdRegID'length));
+			    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+			    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+			    IDtoMA.data.decode(15 downto 0) <= DataRegOutID(15 downto 0);
+			
+			    -- 3) Dirección de escritura = (SP - 2)
+			    IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
+			    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+			    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+			    addrAux := to_integer(unsigned(DataRegOutID(15 downto 0))) - 2;
+			    IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
+			
+			    -- 4) Actualización de SP ? SP - 2 (writeback directo a SP)
+			    IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
+			    IDtoWB.source   <= std_logic_vector(to_unsigned(WB_ID, IDtoWB.source'length));
+			    IDtoWB.mode     <= std_logic_vector(to_unsigned(ID_SP + 1, IDtoWB.mode'length));
+			    IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
+
 			-------------------------------------------------------------------------------------------
 			WHEN POPH =>
 				WAIT FOR 1 ns;
