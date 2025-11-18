@@ -87,6 +87,8 @@ HierarchyInformation=usuario|usuario_architecture|0
 ShowHide=ShowTopLevel
 Selected=
 [Files]
+/..\..\..\..\..\ProcesadorTDA\My_Designs\TDA_1819\TDA_1819\src\andapushhpophylhysh.asdb=-1
+/..\..\..\..\..\ProcesadorTDA\My_Designs\TDA_1819\TDA_1819\src\andapushhpophylhysh.awc=-1
 Packages/tipos_cpu.vhd=-1
 Packages/tipos_memoria.vhd=-1
 Packages/tipos_ensamblador.vhd=-1
@@ -126,6 +128,8 @@ Usuario\PC\2. CPU\7. Registros/registros.vhd=-1
 Usuario\PC\3. Buses_Admin/buses_admin.vhd=-1
 Usuario\PC\4. Memoria/memoria.vhd=-1
 [Files.Data]
+.\..\..\..\..\ProcesadorTDA\My_Designs\TDA_1819\TDA_1819\src\andapushhpophylhysh.asdb=Accelerated Waveform File
+.\..\..\..\..\ProcesadorTDA\My_Designs\TDA_1819\TDA_1819\src\andapushhpophylhysh.awc=Accelerated Waveform Configuration
 .\src\Packages\tipos_cpu.vhd=VHDL Source Code
 .\src\Packages\tipos_memoria.vhd=VHDL Source Code
 .\src\Packages\tipos_ensamblador.vhd=VHDL Source Code

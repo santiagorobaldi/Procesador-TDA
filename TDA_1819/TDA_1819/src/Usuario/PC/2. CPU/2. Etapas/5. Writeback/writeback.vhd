@@ -232,7 +232,7 @@ begin
 		----------------------------------------------------------------
 		WAIT UNTIL falling_edge(EnableWB);
 
-		        if (Mode /= WB_NULL) then
+		    if (Mode /= WB_NULL) then
             Source   := to_integer(unsigned(RecInWBAct.source));
             SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8;
 

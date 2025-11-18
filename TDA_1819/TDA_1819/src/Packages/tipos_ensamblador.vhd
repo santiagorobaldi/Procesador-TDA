@@ -71,7 +71,7 @@ PACKAGE tipos_ensamblador is
 	TYPE label_records IS ARRAY (POSITIVE RANGE <>) OF label_record;   
 	
 	TYPE offset_record IS RECORD
-		name: string(1 to 10);
+		name: string(1 to 32);
 		namelength: integer;
 		address: integer;
 		num_linea: integer;

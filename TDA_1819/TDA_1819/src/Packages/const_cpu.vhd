@@ -84,8 +84,6 @@ PACKAGE const_cpu is
 												-- etapa Execute
 	CONSTANT WB_MEM:		INTEGER := 3;		-- El valor a almacenar en el banco de registros de uso general se originó en la 
 												-- etapa Memory Access
-	 -- NUEVO modo especial para POPH
-	CONSTANT WB_POPH: 		INTEGER := 4;
 											
 END const_cpu;
 
