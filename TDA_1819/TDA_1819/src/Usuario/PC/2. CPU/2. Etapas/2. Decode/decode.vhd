@@ -1543,7 +1543,8 @@ begin
 			    IDtoMA.read     <= '0';
 			    IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
 			    IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
-			
+				
+				if (StallRAW = '0') then
 			    -- 2) Dato a escribir = 16 LSB de rf
 			    rfAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0)));
 			    IdRegID   <= std_logic_vector(to_unsigned(rfAux, IdRegID'length));
@@ -1563,7 +1564,7 @@ begin
 			    IDtoWB.source   <= std_logic_vector(to_unsigned(WB_ID, IDtoWB.source'length));
 			    IDtoWB.mode     <= std_logic_vector(to_unsigned(ID_SP + 1, IDtoWB.mode'length));
 			    IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
-
+				end if;
 			-------------------------------------------------------------------------------------------
         WHEN POPH =>
             ----------------------------------------------------------------
@@ -1579,7 +1580,8 @@ begin
             IDtoMA.write    <= '0';
             IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
             IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
-
+		   	
+			if (StallRAW = '0') then
             -- Dirección de lectura = SP (valor actual de SP)
             IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
             SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
@@ -1588,16 +1590,6 @@ begin
             addrAux := to_integer(unsigned(DataRegOutID(15 downto 0)));  -- SP actual
             IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
 
-            ----------------------------------------------------------------
-            -- Configurar WRITEBACK especial para POPH
-            --   - mode   = rN + 1 (como siempre)
-            --   - source = WB_MEM (dato viene de memoria)
-            --   - datasize = 2 (halfword)
-            --   - data.decode(31) = '1'  => flag POPH
-            --   - data.decode(15 downto 0) = SP_base (SP actual)
-            --
-            -- En WB se hará: SP_new = SP_base + 2
-            ----------------------------------------------------------------
 
             -- rd destino: viene codificado en package1(7 downto 0)
             rdAux := to_integer(unsigned(IFtoID.package1(7 downto 0))) + 1;  -- rN + 1
@@ -1618,7 +1610,7 @@ begin
 
             -- Flag POPH
             IDtoWB.flag_poph <= '1';
-
+			end if;
 
 	
 			-------------------------------------------------------------------------------------------

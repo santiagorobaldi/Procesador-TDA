@@ -176,7 +176,8 @@ architecture RAW_WAW_DETECTOR_ARCHITECTURE of raw_waw_detector is
 	SIGNAL R12_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL R13_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL R14_WrPending:		UNSIGNED(3 downto 0) := B"0000";
-	SIGNAL R15_WrPending:		UNSIGNED(3 downto 0) := B"0000";  
+	SIGNAL R15_WrPending:		UNSIGNED(3 downto 0) := B"0000";
+	SIGNAL SP_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL F0_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL F1_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL F2_WrPending:		UNSIGNED(3 downto 0) := B"0000";
@@ -389,7 +390,10 @@ begin
 			WHEN ID_BP =>
 				NULL;
 			WHEN ID_SP =>
-				NULL;
+				if (SP_WrPending > 0) then
+					StallRAW <= '1';
+					IdRegRAW <= IdRegID; 
+				end if;
 			WHEN ID_RA =>
 				NULL;
 			WHEN OTHERS =>
@@ -495,7 +499,7 @@ begin
 				WHEN ID_BP =>
 					NULL;
 				WHEN ID_SP =>
-					NULL;
+					SP_WrPending <= SP_WrPending + 1;
 				WHEN ID_RA =>
 					NULL;
 				WHEN OTHERS =>
@@ -1006,7 +1010,10 @@ begin
 				WHEN ID_BP =>
 					NULL;
 				WHEN ID_SP =>
-					NULL;
+					if ((SP_WrPending = 1) and (StallRAW = '1') and (to_integer(unsigned(IdRegRAW)) = ID_SP)) then
+						StallRAW <= '0';
+					end if;
+					SP_WrPending <= SP_WrPending - 1;
 				WHEN ID_RA =>
 					NULL;
 				WHEN OTHERS =>
