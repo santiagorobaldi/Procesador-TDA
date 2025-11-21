@@ -1,0 +1,1120 @@
+# ELBREAD: Elaboration process.
+# ELBREAD: Error: Architecture 'usuario_architecture' of entity 'usuario' not found in library 'tda_1819'.
+# ELBREAD: Error: Elaboration process completed with errors.
+# Design: Error: Elaboration failed
+vdel -all
+# Library contents cleared.
+acom -reorder -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Incorrect order of units detected.
+# Automatic reorder and incremental recompilation of required units in progress.
+# Top-level unit(s) detected:
+# Entity => usuario
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57074 kB (elbread=427 elab2=56498 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:01, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IR}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/FLAGS}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/FPFLAGS}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/BP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/RA}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R0}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R1}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R2}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R3}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R4}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R5}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R6}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R7}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R8}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R9}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R10}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R11}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R12}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R13}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R14}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R15}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F0}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F1}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F2}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F3}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F4}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F5}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F6}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F7}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F8}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F9}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F10}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F11}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F12}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F13}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F14}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F15}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutIF}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutEXALU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutEXFPU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInIF}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInEXALU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInEXFPU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SizeRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SizeRegWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIPRd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIRWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIPWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIDIP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALURd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXFPURd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALUWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXFPUWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALUIP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegWB}
+# VSIM: 66 object(s) traced.
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 53 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1050 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56498 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:03, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 53 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1050 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56499 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:05, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 53 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1200 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56499 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:09, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 53 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1200 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+run
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56499 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:10, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 65 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1200 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56498 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:11, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IR}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/FLAGS}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/FPFLAGS}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/BP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/RA}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R0}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R1}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R2}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R3}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R4}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R5}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R6}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R7}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R8}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R9}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R10}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R11}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R12}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R13}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R14}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/R15}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F0}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F1}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F2}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F3}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F4}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F5}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F6}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F7}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F8}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F9}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F10}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F11}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F12}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F13}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F14}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/F15}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutIF}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutEXALU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegOutEXFPU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegFP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInIF}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInEXALU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInEXFPU}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/DataRegInWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IdRegWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SizeRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/SizeRegWB}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIPRd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIRWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIFIPWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegID}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegIDIP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALURd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXFPURd}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALUWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXFPUWr}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegEXALUIP}
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/EnableRegWB}
+# VSIM: 66 object(s) traced.
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 65 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1050 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56499 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:11, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Waveform file 'untitled.awc' connected to 'C:/Users/santi/Procesador-TDA/TDA_1819/TDA_1819/src/wave.asdb'.
+run
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ensamblado exitosamente
+# EXECUTION:: Time: 65 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# EXECUTION:: WARNING: El programa 'Assembler/test_pila.asm' ha sido ejecutado exitosamente
+# EXECUTION:: Time: 1200 ns,  Iteration: 1,  Instance: /usuario,  Process: Main.
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+endsim
+# VSIM: Simulation has finished.
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+asim -t ns -O5 +access +r +m+usuario usuario usuario_architecture
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# VSIM: Stack memory: 32MB
+# VSIM: Retval memory: 32MB
+# 
+acom -O3 -e 100 -work tda_1819 -2002  $dsn/src/Packages/tipos_cpu.vhd $dsn/src/Packages/tipos_memoria.vhd $dsn/src/Packages/tipos_ensamblador.vhd $dsn/src/Packages/const_registros.vhd $dsn/src/Packages/repert_cpu.vhd $dsn/src/Packages/tipos_ascii.vhd $dsn/src/Packages/const_reloj.vhd $dsn/src/Packages/const_cpu.vhd $dsn/src/Packages/const_flags.vhd $dsn/src/Packages/const_memoria.vhd $dsn/src/Packages/const_buses.vhd $dsn/src/Packages/const_ascii.vhd $dsn/src/Packages/const_ensamblador.vhd $dsn/src/Packages/func_ensamblador.vhd $dsn/src/Usuario/usuario.vhd $dsn/src/Usuario/PC/pc.vhd "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd" "$dsn/src/Usuario/PC/2. CPU/cpu.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/ui.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/1. Máquina de Estados/states_machine.vhd" "$dsn/src/Usuario/PC/2. CPU/1. UI/2. Registros FP/registros_fp.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/etapas.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/1. Fetch/fetch.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/execute.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/1. ALU/execute_alu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/3. Execute/2. FPU/execute_fpu.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/4. Memory Access/memory_access.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/5. Writeback/writeback.vhd" "$dsn/src/Usuario/PC/2. CPU/3. Pipeline_Registros/pipeline_registros.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/atascos.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/1. Estructurales/str_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/4. Atascos/2. Datos/raw_waw_detector.vhd" "$dsn/src/Usuario/PC/2. CPU/5. CPU_Admin/cpu_admin.vhd" "$dsn/src/Usuario/PC/2. CPU/6. Reloj/reloj.vhd" "$dsn/src/Usuario/PC/2. CPU/7. Registros/registros.vhd" "$dsn/src/Usuario/PC/3. Buses_Admin/buses_admin.vhd" "$dsn/src/Usuario/PC/4. Memoria/memoria.vhd" "$dsn/src/Usuario/PC/2. CPU/2. Etapas/2. Decode/decode.vhd" "$dsn/src/Usuario/PC/1. Ensamblador/ensamblador.vhd"
+# Compile Package "tipos_cpu"
+# Compile Package Body "tipos_cpu"
+# Compile Package "tipos_memoria"
+# Compile Package Body "tipos_memoria"
+# Compile Package "tipos_ensamblador"
+# Compile Package Body "tipos_ensamblador"
+# Compile Package "const_registros"
+# Compile Package Body "const_registros"
+# Compile Package "repert_cpu"
+# Compile Package Body "repert_cpu"
+# Compile Package "tipos_ascii"
+# Compile Package Body "tipos_ascii"
+# Compile Package "const_reloj"
+# Compile Package Body "const_reloj"
+# Compile Package "const_cpu"
+# Compile Package Body "const_cpu"
+# Compile Package "const_flags"
+# Compile Package Body "const_flags"
+# Compile Package "const_memoria"
+# Compile Package Body "const_memoria"
+# Compile Package "const_buses"
+# Compile Package Body "const_buses"
+# Compile Package "const_ascii"
+# Compile Package Body "const_ascii"
+# Compile Package "const_ensamblador"
+# Compile Package Body "const_ensamblador"
+# Compile Package "func_ensamblador"
+# Compile Package Body "func_ensamblador"
+# Compile Entity "usuario"
+# Compile Architecture "USUARIO_ARCHITECTURE" of Entity "usuario"
+# Compile Entity "pc"
+# Compile Architecture "PC_ARCHITECTURE" of Entity "pc"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile Entity "cpu"
+# Compile Architecture "CPU_ARCHITECTURE" of Entity "cpu"
+# Compile Entity "ui"
+# Compile Architecture "UI_ARCHITECTURE" of Entity "ui"
+# Compile Entity "states_machine"
+# Compile Architecture "STATES_MACHINE_ARCHITECTURE" of Entity "states_machine"
+# Compile Entity "registros_fp"
+# Compile Architecture "REGISTROS_FP_ARCHITECTURE" of Entity "registros_fp"
+# Compile Entity "etapas"
+# Compile Architecture "ETAPAS_ARCHITECTURE" of Entity "etapas"
+# Compile Entity "fetch"
+# Compile Architecture "fetch_architecture" of Entity "fetch"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile Entity "decode"
+# Compile Architecture "decode_architecture" of Entity "decode"
+# Compile Entity "ensamblador"
+# Compile Architecture "ENSAMBLADOR_ARCHITECTURE" of Entity "ensamblador"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+# ELBREAD: Elaboration process.
+# ELBREAD: Elaboration time 0.0 [s].
+# KERNEL: Main thread initiated.
+# KERNEL: Kernel process initialization phase.
+# ELAB2: Elaboration final pass...
+# ELAB2: Create instances ...
+# KERNEL: Time resolution set to 1ns.
+# ELAB2: Create instances complete.
+# SLP: Started
+# SLP: Elaboration phase ...
+# SLP: Elaboration phase ... skipped, nothing to simulate in SLP mode : 0.0 [s]
+# SLP: Finished : 0.0 [s]
+# ELAB2: Elaboration final pass complete - time: 0.2 [s].
+# KERNEL: Warning: You are using the Active-HDL Student Edition. The performance of simulation is running at a reduced rate.
+# KERNEL: Warning: Contact Aldec for available upgrade options - sales@aldec.com.
+# KERNEL: Kernel process initialization done.
+# Allocation: Simulator allocated 57075 kB (elbread=427 elab2=56499 kernel=149 sdf=0)
+# KERNEL: ASDB file was created in location C:\Users\santi\Procesador-TDA\TDA_1819\TDA_1819\src\wave.asdb
+#  13:52, viernes, 21 de noviembre de 2025
+#  Simulation has been initialized
+# Compile Entity "execute"
+# Compile Architecture "EXECUTE_ARCHITECTURE" of Entity "execute"
+# Compile Entity "execute_alu"
+# Compile Architecture "EXECUTE_ALU_ARCHITECTURE" of Entity "execute_alu"
+# Compile Entity "execute_fpu"
+# Compile Architecture "EXECUTE_FPU_ARCHITECTURE" of Entity "execute_fpu"
+# Compile Entity "memory_access"
+# Compile Architecture "MEMORY_ACCESS_ARCHITECTURE" of Entity "memory_access"
+# Compile Entity "writeback"
+# Compile Architecture "WRITEBACK_ARCHITECTURE" of Entity "writeback"
+# Compile Entity "pipeline_registros"
+# Compile Architecture "pipeline_registros_architecture" of Entity "pipeline_registros"
+# Compile Entity "atascos"
+# Compile Architecture "ATASCOS_ARCHITECTURE" of Entity "atascos"
+# Compile Entity "str_detector"
+# Compile Architecture "STR_DETECTOR_ARCHITECTURE" of Entity "str_detector"
+# Compile Entity "raw_waw_detector"
+# Compile Architecture "RAW_WAW_DETECTOR_ARCHITECTURE" of Entity "raw_waw_detector"
+# Compile Entity "cpu_admin"
+# Compile Architecture "cpu_admin_architecture" of Entity "cpu_admin"
+# Compile Entity "reloj"
+# Compile Architecture "reloj_architecture" of Entity "reloj"
+# Compile Entity "registros"
+# Compile Architecture "REGISTROS_ARCHITECTURE" of Entity "registros"
+# Compile Entity "buses_admin"
+# Compile Architecture "BUSES_ADMIN_ARCHITECTURE" of Entity "buses_admin"
+# Compile Entity "memoria"
+# Compile Architecture "MEMORIA_ARCHITECTURE" of Entity "memoria"
+# Compile success 0 Errors 0 Warnings  Analysis time :  1.0 [s]
+# add wave -noreg {/usuario/UUT/UUT2/UUT7/IR}
+# add wave -noreg {/usuario/

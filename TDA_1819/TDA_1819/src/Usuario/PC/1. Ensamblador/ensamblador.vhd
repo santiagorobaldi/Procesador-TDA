@@ -2115,6 +2115,7 @@ begin
 		end if;
 	END checkInstLD; 
 	
+	--------------------------- NUEVO PROCEDIMIENTO PARA CHEQUEAR SINTAXIS DE LAS INSTRUCCIONES DEL MANEJO DE PILA ------------
 	
 	PROCEDURE checkInstMdp(
 	    CONSTANT cadena      : IN STRING;
@@ -2145,7 +2146,7 @@ begin
 	        indice := indice + 1;
 	    END LOOP;
 	
-	    -- Si no matchea el mnemónico, este procedimiento "no aplica"
+	    -- Si no matchea el mnemónico, este procedimiento no aplica
 	    IF (NOT match) THEN
 	        check := false;
 	        RETURN;
@@ -2540,10 +2541,8 @@ begin
 			i := i + 1;
 		end loop;
 
-		-- Inicializar el flag
 		check := false;
 
-		-- 1) Instrucciones de transferencia de datos (lb, lh, sh, etc.)
 		for j in INSTTD_NAMES'RANGE loop
 			checkInstTd(variables, cant_variables, cadena, INSTTD_NAMES(j), INSTTD_CODES(j), INSTTD_SIZES(j), i, check, nombre, num_linea, addr_linea);
 			if (check) then	
@@ -2555,7 +2554,7 @@ begin
 			end if;
 		end loop;	
 		
-		-- 2) Instrucciones de manejo de pila (pushh / poph)
+		------------------------- Instrucciones de manejo de pila --------------------------------------------------
 		if (not check) then
 			for j in INSMDP_NAMES'RANGE loop
 				checkInstMdp(cadena, INSMDP_NAMES(j), INSMDP_CODES(j),
@@ -2569,9 +2568,10 @@ begin
 					exit;
 				end if;
 			end loop;
-		end if;
+		end if;	 
 		
-		-- 3) Instrucciones aritméticas
+		------------------------------------------------------------------------------------------------------------
+		
 		if (not check) then
 			for j in INSTAR_NAMES'RANGE loop
 				checkInstAr(cadena, INSTAR_NAMES(j), INSTAR_CODES(j), INSTAR_SIZES(j), i, check, nombre, num_linea, addr_linea);
@@ -2585,7 +2585,6 @@ begin
 			end loop;
 		end if;
 
-		-- 4) Instrucciones lógicas / desplazamiento
 		if (not check) then
 			for j in INSTLD_NAMES'RANGE loop
 				checkInstLD(cadena, INSTLD_NAMES(j), INSTLD_CODES(j), INSTLD_SIZES(j), i, check, nombre, num_linea, addr_linea);
@@ -2599,7 +2598,6 @@ begin
 			end loop;
 		end if;
 
-		-- 5) Instrucciones de transferencia de control
 		if (not check) then
 			for j in INSTTC_NAMES'RANGE loop
 				checkInstTc(offsets, cant_offsets, cadena, INSTTC_NAMES(j), INSTTC_CODES(j), INSTTC_SIZES(j), i, check, nombre, num_linea, addr_linea);
@@ -2613,7 +2611,6 @@ begin
 			end loop;
 		end if;
 
-		-- 6) Instrucciones de control del procesador (halt, etc.)
 		if (not check) then
 			for j in INSTCT_NAMES'RANGE loop
 				checkInstCt(cadena, INSTCT_NAMES(j), INSTCT_CODES(j), INSTCT_SIZES(j), i, check, is_halt, addr_linea);

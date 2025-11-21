@@ -278,7 +278,12 @@ begin
                 SizeRegWB <= RecInWBAct.datasize;
                 DataRegInWB <= (others => '0');
                 DataRegInWB(15 downto 0) <= std_logic_vector(sp_base);
+				
+				IdRegDecWrPend  <= std_logic_vector(to_unsigned(ID_SP + 1, IdRegDecWrPend'length));
+				EnableDecWrPend <= '1';  WAIT FOR 1 ns;
+				EnableDecWrPend <= '0';  WAIT FOR 1 ns;
 
+				
                 EnableRegWB <= '1';
                 WAIT FOR 1 ns;
                 EnableRegWB <= '0';

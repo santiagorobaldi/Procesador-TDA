@@ -297,16 +297,40 @@ begin
 		end if;
 		StallBrID <= '0';
 		StallBrEX <= '0';
+		
+		----------------------------------------------------------------
+		-- 1) Instrucción anterior: incremento “normal” del registro
+		--    destino (IDtoWB.mode) en el detector de RAW/WAW
+		----------------------------------------------------------------
 		IdInstIncWrPend <= IDtoWB.id;
-		IdRegIncWrPend <= IDtoWB.mode;
-		EnableIncWrPend <= '1';	
+		IdRegIncWrPend  <= IDtoWB.mode;
+		EnableIncWrPend <= '1';
 		if (IDtoEX.fp = '1') then
-			EnableIncFPWrPend <= '1';
+		    EnableIncFPWrPend <= '1';
 		end if;
 		WAIT FOR 1 ns;
-		EnableIncWrPend <= '0';
+		EnableIncWrPend   <= '0';
 		EnableIncFPWrPend <= '0';
 		WAIT FOR 1 ns;
+		
+		----------------------------------------------------------------
+		-- 2) Caso especial: si la instrucción anterior fue POPH,
+		--    también va a escribir SP en writeback.
+		--    Anunciamos esa segunda escritura futura (sobre SP)
+		--    al detector, usando el MISMO bus IdRegIncWrPend pero
+		--    en un segundo pulso separado.
+		----------------------------------------------------------------
+		if (IDtoWB.flag_poph = '1') then
+		    -- misma instrucción (mismo id)
+		    IdInstIncWrPend <= IDtoWB.id;
+		    -- SP codificado como ID_SP+1 (igual que en writeback)
+		    IdRegIncWrPend  <= std_logic_vector(to_unsigned(ID_SP + 1, IdRegIncWrPend'length));
+		    EnableIncWrPend <= '1';
+		    WAIT FOR 1 ns;
+		    EnableIncWrPend <= '0';
+		    WAIT FOR 1 ns;
+		end if;
+		
 		if (updateCodOp) then
 			IdRegID <= std_logic_vector(to_unsigned(ID_IR, IdRegID'length));
 			SizeRegID <= std_logic_vector(to_unsigned(1, SizeRegID'length));
@@ -1537,6 +1561,7 @@ begin
 			
 			-------------------------------------------------------------------------------------------
 			WHEN PUSHH =>
+				if (StallRAW = '0') then
 			    -- 1) Configurar acceso de MEMORIA: write half-word
 			    IDtoMA.mode     <= std_logic_vector(to_unsigned(MEM_MEM, IDtoMA.mode'length));
 			    IDtoMA.write    <= '1';
@@ -1544,7 +1569,7 @@ begin
 			    IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
 			    IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
 				
-				if (StallRAW = '0') then
+				
 			    -- 2) Dato a escribir = 16 LSB de rf
 			    rfAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0)));
 			    IdRegID   <= std_logic_vector(to_unsigned(rfAux, IdRegID'length));
@@ -1567,7 +1592,8 @@ begin
 				end if;
 			-------------------------------------------------------------------------------------------
         WHEN POPH =>
-            ----------------------------------------------------------------
+			
+			----------------------------------------------------------------
             -- POPH rd
             -- 1) Lectura half-word desde [SP]  (etapa MA)
             -- 2) En WB: escribir rd con el valor leído y SP con SP+2
@@ -1580,8 +1606,8 @@ begin
             IDtoMA.write    <= '0';
             IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
             IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
-		   	
-			if (StallRAW = '0') then
+		   	if (StallRAW = '0') then
+			
             -- Dirección de lectura = SP (valor actual de SP)
             IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
             SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
@@ -1592,7 +1618,7 @@ begin
 
 
             -- rd destino: viene codificado en package1(7 downto 0)
-            rdAux := to_integer(unsigned(IFtoID.package1(7 downto 0))) + 1;  -- rN + 1
+            rdAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0))) + 1;  -- rN + 1
 
             IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
             IDtoWB.source   <= std_logic_vector(to_unsigned(WB_MEM, IDtoWB.source'length));
