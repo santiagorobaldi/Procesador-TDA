@@ -176,8 +176,12 @@ architecture RAW_WAW_DETECTOR_ARCHITECTURE of raw_waw_detector is
 	SIGNAL R12_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL R13_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL R14_WrPending:		UNSIGNED(3 downto 0) := B"0000";
-	SIGNAL R15_WrPending:		UNSIGNED(3 downto 0) := B"0000";
-	SIGNAL SP_WrPending:		UNSIGNED(3 downto 0) := B"0000";
+	SIGNAL R15_WrPending:		UNSIGNED(3 downto 0) := B"0000";  
+	
+	--------------------- Agrego el SP ---------------------------------
+	SIGNAL SP_WrPending:		UNSIGNED(3 downto 0) := B"0000"; 
+	--------------------------------------------------------------------   
+	
 	SIGNAL F0_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL F1_WrPending:		UNSIGNED(3 downto 0) := B"0000";
 	SIGNAL F2_WrPending:		UNSIGNED(3 downto 0) := B"0000";

@@ -1562,33 +1562,33 @@ begin
 			-------------------------------------------------------------------------------------------
 			WHEN PUSHH =>
 				if (StallRAW = '0') then
-			    -- 1) Configurar acceso de MEMORIA: write half-word
-			    IDtoMA.mode     <= std_logic_vector(to_unsigned(MEM_MEM, IDtoMA.mode'length));
-			    IDtoMA.write    <= '1';
-			    IDtoMA.read     <= '0';
-			    IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
-			    IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
+				    -- 1) Configurar acceso de MEMORIA: write half-word
+				    IDtoMA.mode     <= std_logic_vector(to_unsigned(MEM_MEM, IDtoMA.mode'length));
+				    IDtoMA.write    <= '1';
+				    IDtoMA.read     <= '0';
+				    IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
+				    IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
+					
+					
+				    -- 2) Dato a escribir = 16 LSB de rf
+				    rfAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0)));
+				    IdRegID   <= std_logic_vector(to_unsigned(rfAux, IdRegID'length));
+				    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+				    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+				    IDtoMA.data.decode(15 downto 0) <= DataRegOutID(15 downto 0);
 				
+				    -- 3) Dirección de escritura = (SP - 2)
+				    IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
+				    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+				    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+				    addrAux := to_integer(unsigned(DataRegOutID(15 downto 0))) - 2;
+				    IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
 				
-			    -- 2) Dato a escribir = 16 LSB de rf
-			    rfAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0)));
-			    IdRegID   <= std_logic_vector(to_unsigned(rfAux, IdRegID'length));
-			    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
-			    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
-			    IDtoMA.data.decode(15 downto 0) <= DataRegOutID(15 downto 0);
-			
-			    -- 3) Dirección de escritura = (SP - 2)
-			    IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
-			    SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
-			    EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
-			    addrAux := to_integer(unsigned(DataRegOutID(15 downto 0))) - 2;
-			    IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
-			
-			    -- 4) Actualización de SP ? SP - 2 (writeback directo a SP)
-			    IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
-			    IDtoWB.source   <= std_logic_vector(to_unsigned(WB_ID, IDtoWB.source'length));
-			    IDtoWB.mode     <= std_logic_vector(to_unsigned(ID_SP + 1, IDtoWB.mode'length));
-			    IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
+				    -- 4) Actualización de SP
+				    IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
+				    IDtoWB.source   <= std_logic_vector(to_unsigned(WB_ID, IDtoWB.source'length));
+				    IDtoWB.mode     <= std_logic_vector(to_unsigned(ID_SP + 1, IDtoWB.mode'length));
+				    IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
 				end if;
 			-------------------------------------------------------------------------------------------
         WHEN POPH =>
@@ -1606,36 +1606,31 @@ begin
             IDtoMA.write    <= '0';
             IDtoMA.datasize <= std_logic_vector(to_unsigned(2, IDtoMA.datasize'length));
             IDtoMA.source   <= std_logic_vector(to_unsigned(MEM_ID, IDtoMA.source'length));
-		   	if (StallRAW = '0') then
-			
-            -- Dirección de lectura = SP (valor actual de SP)
-            IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
-            SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
-            EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
-
-            addrAux := to_integer(unsigned(DataRegOutID(15 downto 0)));  -- SP actual
-            IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
-
-
-            -- rd destino: viene codificado en package1(7 downto 0)
-            rdAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0))) + 1;  -- rN + 1
-
-            IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
-            IDtoWB.source   <= std_logic_vector(to_unsigned(WB_MEM, IDtoWB.source'length));
-            IDtoWB.mode     <= std_logic_vector(to_unsigned(rdAux, IDtoWB.mode'length));  -- IdRegWB = rdAux-1
-
-            -- Limpiar campos propios de ID/EX, pero SIN tocar memaccess
-            IDtoWB.data.decode      <= (others => '0');
-            IDtoWB.data.execute     <= (others => '0');
-            -- IMPORTANTE: NO PISAR data.memaccess:
-            -- NO pongas: IDtoWB.data.memaccess <= (others => '0');
-
-            -- Guardar SP base (SP actual) en data.decode(15 downto 0)
-            -- OJO: aquí va el SP ACTUAL, sin +2
-            IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
-
-            -- Flag POPH
-            IDtoWB.flag_poph <= '1';
+		   	
+			if (StallRAW = '0') then
+				
+	            -- Dirección de lectura = SP (valor actual de SP)
+	            IdRegID   <= std_logic_vector(to_unsigned(ID_SP, IdRegID'length));
+	            SizeRegID <= std_logic_vector(to_unsigned(2, SizeRegID'length));
+	            EnableRegID <= '1';  WAIT FOR 1 ns;  EnableRegID <= '0';  WAIT FOR 1 ns;
+	
+	            addrAux := to_integer(unsigned(DataRegOutID(15 downto 0)));  -- SP actual
+	            IDtoMA.address <= std_logic_vector(to_unsigned(addrAux, IDtoMA.address'length));
+	
+	
+	            -- rd destino: viene codificado en package1(7 downto 0)
+	            rdAux := to_integer(unsigned(IFtoIDLocal.package1(7 downto 0))) + 1;
+	
+	            IDtoWB.datasize <= std_logic_vector(to_unsigned(2, IDtoWB.datasize'length));
+	            IDtoWB.source   <= std_logic_vector(to_unsigned(WB_MEM, IDtoWB.source'length));
+	            IDtoWB.mode     <= std_logic_vector(to_unsigned(rdAux, IDtoWB.mode'length));  -- IdRegWB = rdAux-1
+	
+	
+	            -- Guardar SP base (SP actual) en data.decode(15 downto 0)
+	            IDtoWB.data.decode(15 downto 0) <= std_logic_vector(to_unsigned(addrAux, 16));
+	
+	            -- Flag POPH
+	            IDtoWB.flag_poph <= '1';
 			end if;
 
 	

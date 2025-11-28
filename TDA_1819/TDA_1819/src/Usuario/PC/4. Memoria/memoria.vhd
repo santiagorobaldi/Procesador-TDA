@@ -40,10 +40,6 @@ architecture MEMORIA_ARCHITECTURE of memoria is
     SIGNAL Stack_Memory : type_memory(STACK_BEGIN  to MEMORY_END);
 
 begin
-
-    --------------------------------------------------------------------
-    -- DataMemory: acceso a memoria de datos (incluye sección de pila)
-    --------------------------------------------------------------------
     DataMemory: PROCESS
 	
         VARIABLE First      : BOOLEAN := true;
@@ -64,9 +60,8 @@ begin
         accessSize := to_integer(unsigned(DataSizeBusMem));
         iDataBus   := 0;
 
-        -- CAMBIO: ahora aceptamos accesos tanto al segmento de datos
-        --         [DATA_BEGIN .. INST_BEGIN-1]
-        --         como al segmento de pila [STACK_BEGIN .. MEMORY_END].
+        -- ahora acepto accesos tanto a la memoria de datos [DATA_BEGIN .. INST_BEGIN-1]
+        -- como al segmento de pila [STACK_BEGIN .. MEMORY_END].
         if not (
             (intAddress >= DATA_BEGIN  and intAddress <= INST_BEGIN-1) or
             (intAddress >= STACK_BEGIN and intAddress <= MEMORY_END)
@@ -79,7 +74,7 @@ begin
 
             for i in 0 to accessSize-1 loop
 
-                -- CAMBIO: leemos de Data_Memory o Stack_Memory según el rango.
+                -- leo de Data_Memory o Stack_Memory según el rango.
                 if (intAddress >= DATA_BEGIN and intAddress <= INST_BEGIN-1) then
                     for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop
                         DataDataBusOutMem(iDataBus) <= Data_Memory(intAddress)(j);
@@ -103,7 +98,7 @@ begin
 
             for i in 0 to accessSize-1 loop
 
-                -- CAMBIO: escribimos en Data_Memory o Stack_Memory según el rango.
+                -- escribo en Data_Memory o Stack_Memory según el rango.
                 if (intAddress >= DATA_BEGIN and intAddress <= INST_BEGIN-1) then
                     for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop
                         Data_Memory(intAddress)(j) <= DataDataBusInMem(iDataBus);
@@ -126,119 +121,85 @@ begin
     END PROCESS DataMemory;
 	
 	
-    --------------------------------------------------------------------
-    -- InstMemory: acceso a memoria de instrucciones
-    --------------------------------------------------------------------
-    InstMemory: PROCESS
+ 	InstMemory: PROCESS
 	
-        VARIABLE First      : BOOLEAN := true;
-        VARIABLE intAddress : INTEGER; 
-        VARIABLE accessSize : INTEGER;
-        VARIABLE iDataBus   : INTEGER;
+	VARIABLE First: BOOLEAN := true;
+	VARIABLE intAddress: INTEGER; 
+	VARIABLE accessSize: INTEGER;
+	VARIABLE iDataBus: INTEGER;
 	
-    BEGIN
-        WAIT UNTIL rising_edge(EnableInInstMem);
-
-        if (First) then
-            First := false;
-            EnableInstMemToCpu <= '0';
-            WAIT FOR 1 ps;
-        end if;
-
-        intAddress := to_integer(unsigned(InstAddrBusMem)); 
-        accessSize := to_integer(unsigned(InstSizeBusMem));
-        iDataBus   := 0;
-
-        if ((intAddress < INST_BEGIN) or (intAddress > SUBR_BEGIN-1)) then
-            report "Error: la dirección seleccionada no pertenece a la memoria de instrucciones"
-            severity FAILURE;
-        end if;
-
-        if (InstCtrlBusMem = READ_MEMORY) then
-
-            for i in 0 to accessSize-1 loop
-                for j in 0 to Inst_Memory(intAddress)'LENGTH-1 loop
-                    InstDataBusOutMem(iDataBus) <= Inst_Memory(intAddress)(j);
-                    iDataBus := iDataBus + 1;
-                end loop;
-                intAddress := intAddress + 1;
-            end loop;
-
-            EnableInstMemToCpu <= '1';
-            WAIT FOR 1 ps;
-            EnableInstMemToCpu <= '0'; 
-
-        elsif (InstCtrlBusMem = WRITE_MEMORY) then
-
-            -- CAMBIO MENOR: usar Inst_Memory'length en lugar de Data_Memory'length
-            for i in 0 to accessSize-1 loop
-                for j in 0 to Inst_Memory(intAddress)'LENGTH-1 loop
-                    Inst_Memory(intAddress)(j) <= InstDataBusInMem(iDataBus);
-                    iDataBus := iDataBus + 1;
-                end loop;
-                intAddress := intAddress + 1;
-            end loop;
-
-        else
-            report "Error: el bus de control de la memoria de instrucciones no posee un valor válido"
-            severity FAILURE;
-        end if;
-    END PROCESS InstMemory;	 
+	BEGIN
+		WAIT UNTIL rising_edge(EnableInInstMem);
+		if (First) then
+			First := false;
+			EnableInstMemToCpu <= '0';
+			WAIT FOR 1 ps;
+		end if;
+		intAddress := to_integer(unsigned(InstAddrBusMem)); 
+		accessSize := to_integer(unsigned(InstSizeBusMem));
+		iDataBus := 0;
+		if ((intAddress < INST_BEGIN) or (intAddress > SUBR_BEGIN-1)) then
+			report "Error: la dirección seleccionada no pertenece a la memoria de instrucciones"
+			severity FAILURE;
+		end if;
+		if (InstCtrlBusMem = READ_MEMORY) then
+			for i in 0 to accessSize-1 loop
+				for j in 0 to Inst_Memory(intAddress)'LENGTH-1 loop
+					InstDataBusOutMem(iDataBus) <= Inst_Memory(intAddress)(j);
+					iDataBus := iDataBus + 1;
+				end loop;
+				intAddress := intAddress + 1;
+			end loop;
+			EnableInstMemToCpu <= '1';
+			WAIT FOR 1 ps;
+			EnableInstMemToCpu <= '0'; 
+		elsif (InstCtrlBusMem = WRITE_MEMORY) then
+			for i in 0 to accessSize-1 loop
+				for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop
+					Inst_Memory(intAddress)(j) <= InstDataBusInMem(iDataBus);
+					--Memory(intAddress)(j) <= InstDataBusInMem(iDataBus);
+					iDataBus := iDataBus + 1;
+				end loop;
+				intAddress := intAddress + 1;
+			end loop;
+		else
+			report "Error: el bus de control de la memoria de instrucciones no posee un valor válido"
+			severity FAILURE;
+		end if;
+	END PROCESS InstMemory;	 
 	
 	
-    --------------------------------------------------------------------
-    -- FullMemory: mantiene Memory sincronizada con Data/Inst/Pila
-    --------------------------------------------------------------------
-    FullMemory: PROCESS	  	
+	FullMemory: PROCESS	  
 	
-        VARIABLE intAddress : INTEGER; 
-        VARIABLE accessSize : INTEGER;
-        VARIABLE iDataBus   : INTEGER;
+	VARIABLE intAddress: INTEGER; 
+	VARIABLE accessSize: INTEGER;
+	VARIABLE iDataBus: INTEGER;
 	
-    BEGIN
-        WAIT UNTIL (rising_edge(EnableInDataMem) OR rising_edge(EnableInInstMem)); 
-
-        -- CAMBIO: ahora reflejamos tanto la RAM de datos como la pila
-        --         en la memoria "global" Memory.
-        if ((EnableInDataMem = '1') and (DataCtrlBusMem = WRITE_MEMORY)) then
-
-            intAddress := to_integer(unsigned(DataAddrBusMem)); 
-            accessSize := to_integer(unsigned(DataSizeBusMem));
-            iDataBus   := 0;
-
-            for i in 0 to accessSize-1 loop
-
-                if (intAddress >= DATA_BEGIN and intAddress <= INST_BEGIN-1) then
-                    for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop
-                        Memory(intAddress)(j) <= DataDataBusInMem(iDataBus);
-                        iDataBus := iDataBus + 1;
-                    end loop;
-                elsif (intAddress >= STACK_BEGIN and intAddress <= MEMORY_END) then
-                    for j in 0 to Stack_Memory(intAddress)'LENGTH-1 loop
-                        Memory(intAddress)(j) <= DataDataBusInMem(iDataBus);
-                        iDataBus := iDataBus + 1;
-                    end loop;
-                end if;
-
-                intAddress := intAddress + 1;
-            end loop;
-
-        elsif ((EnableInInstMem = '1') and (InstCtrlBusMem = WRITE_MEMORY)) then 
-
-            intAddress := to_integer(unsigned(InstAddrBusMem)); 
-            accessSize := to_integer(unsigned(InstSizeBusMem));
-            iDataBus   := 0;
-
-            -- CAMBIO MENOR: usamos Inst_Memory'length como referencia.
-            for i in 0 to accessSize-1 loop
-                for j in 0 to Inst_Memory(intAddress)'LENGTH-1 loop	   
-                    Memory(intAddress)(j) <= InstDataBusInMem(iDataBus);
-                    iDataBus := iDataBus + 1;
-                end loop;
-                intAddress := intAddress + 1;
-            end loop;
-
-        end if;
-    END PROCESS FullMemory;
+	BEGIN
+		WAIT UNTIL (rising_edge(EnableInDataMem) OR rising_edge(EnableInInstMem)); 
+		if ((EnableInDataMem = '1') and (DataCtrlBusMem = WRITE_MEMORY)) then
+			intAddress := to_integer(unsigned(DataAddrBusMem)); 
+			accessSize := to_integer(unsigned(DataSizeBusMem));
+			iDataBus := 0;
+			for i in 0 to accessSize-1 loop
+				for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop
+					Memory(intAddress)(j) <= DataDataBusInMem(iDataBus);
+					iDataBus := iDataBus + 1;
+				end loop;
+				intAddress := intAddress + 1;
+			end loop;
+		elsif ((EnableInInstMem = '1') and (InstCtrlBusMem = WRITE_MEMORY)) then 
+			intAddress := to_integer(unsigned(InstAddrBusMem)); 
+			accessSize := to_integer(unsigned(InstSizeBusMem));
+			iDataBus := 0;
+			for i in 0 to accessSize-1 loop
+				for j in 0 to Data_Memory(intAddress)'LENGTH-1 loop	   
+					Memory(intAddress)(j) <= InstDataBusInMem(iDataBus);
+					iDataBus := iDataBus + 1;
+				end loop;
+				intAddress := intAddress + 1;
+			end loop;
+		end if;
+	END PROCESS FullMemory;
 				
 end MEMORIA_ARCHITECTURE;

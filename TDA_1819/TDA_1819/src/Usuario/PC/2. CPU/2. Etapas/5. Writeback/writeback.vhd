@@ -68,10 +68,7 @@ end writeback;
 
 architecture WRITEBACK_ARCHITECTURE of writeback is
 
-	-- Registro efectivo que se va a escribir en este ciclo
 	SIGNAL RecInWBAct: writeback_record;
-
-	-- Registros auxiliares para manejar WAW / estructurales
 	SIGNAL RecInWBAux:  writeback_record;
 	SIGNAL RecInWBAux2: writeback_record;
 	SIGNAL IdRecWAW:    std_logic_vector(7 downto 0);
@@ -111,9 +108,7 @@ begin
 		END InitializeRecInWBAux2;
 	
 	BEGIN 
-		----------------------------------------------------------------
-		-- Inicialización
-		----------------------------------------------------------------
+
 		if (First) then
 			First := false;
 			IdRecWAW       <= (others => 'Z');
@@ -126,25 +121,17 @@ begin
 			WAIT FOR 1 ns;
 		end if;
 
-		----------------------------------------------------------------
-		-- Fase 1: detección WAW / estructurales, selección de RecInWBAct
-		----------------------------------------------------------------
 		WAIT UNTIL rising_edge(EnableWB);
 
-		-- Enviar registro a detector de WAW
 		WbRegCheckWAW <= RecInWB;
 		EnableCheckWAW <= '1';
 		WAIT FOR 1 ns;
 		EnableCheckWAW <= '0';
 
 		if (StallWAW = '0') then
-			----------------------------------------------------------------
-			-- No hay stall WAW: elegir qué registro escribir
-			----------------------------------------------------------------
+			
 			if (to_integer(unsigned(RecInWBAux.mode)) = WB_NULL) then
-				-- No hay auxiliar pendiente
 				if (IdRecWAW /= "ZZZZZZZZ") then
-					-- Hubo WAW previo: comparar IDs
 					if (RecInWB.id < IdRecWAW) then
 						IdRegDecWrPend <= RecInWB.mode;
 						EnableDecWrPend <= '1';
@@ -157,7 +144,6 @@ begin
 						RecInWBAux2 <= RecInWB;
 					end if;
 				elsif (to_integer(unsigned(RecInWBAux2.mode)) /= WB_NULL) then
-					-- Hay auxiliar "2" pendiente
 					IdRegDecWrPend <= RecInWBAux2.mode;
 					EnableDecWrPend <= '1';
 					WAIT FOR 1 ns;
@@ -166,7 +152,6 @@ begin
 					Mode       := to_integer(unsigned(RecInWBAux2.mode));
 					InitializeRecInWBAux2;
 				else
-					-- Caso normal: usar RecInWB actual
 					IdRegDecWrPend <= RecInWB.mode;
 					EnableDecWrPend <= '1';
 					WAIT FOR 1 ns;
@@ -176,7 +161,6 @@ begin
 				end if;
 
 			elsif (StallSTR = '1') then
-				-- Hay stall estructural de memoria
 				DoneSTRW <= '1';
 				if (to_integer(unsigned(RecInWBAux2.mode)) /= WB_NULL) then
 					IdRegDecWrPend <= RecInWBAux.mode;
@@ -205,7 +189,6 @@ begin
 					InitializeRecInWBAux;
 				end if;
 			else
-				-- Hay algo en RecInWBAux y no hay stall estructural
 				IdRegDecWrPend <= RecInWBAux.mode;
 				EnableDecWrPend <= '1';
 				WAIT FOR 1 ns;
@@ -216,42 +199,33 @@ begin
 				InitializeRecInWBAux;
 			end if;
 
-			-- Actualizar auxiliar con resultado del detector WAW
 			if (DoneWAW = '1') then
 				RecInWBAux <= WbRegDoneWAW;
 				IdRecWAW   <= (others => 'Z');
 			end if;
 		else
-			-- Stall WAW activo: no se escribe este ciclo
 			Mode    := WB_NULL;
 			IdRecWAW<= RecInWB.id;
 		end if;
 
-		----------------------------------------------------------------
-		-- Fase 2: escritura efectiva en banco de registros
-		----------------------------------------------------------------
 		WAIT UNTIL falling_edge(EnableWB);
 
 		    if (Mode /= WB_NULL) then
             Source   := to_integer(unsigned(RecInWBAct.source));
-            SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8;
-
-            -- Flag POPH: usamos bit 31 de data.decode
+            SizeBits := to_integer(unsigned(RecInWBAct.datasize))*8; 
+			
+			--------------------------------------------------------------------------------------------------------
+            -- Aca pregunto si la instruccion es un poph con Flag POPH
             if (RecInWBAct.flag_poph = '1')  then
                 ----------------------------------------------------------------
-                -- INSTRUCCIÓN POPH (penalizada en WB):
-                --   data.memaccess           = valor leido de pila (halfword)
-                --   data.decode(15 downto 0) = SP_base (SP actual en decode)
-                --
-                -- En WB hacemos:
-                --   1) rN <= data.memaccess
-                --   2) SP <= SP_base + 2
-                ----------------------------------------------------------------
-                -- 1) Escritura de rN con valor de la pila
-                IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length)); -- Mode = rN+1
+                -- INSTRUCCIÓN POPH - penalizada (toma mas tiempo):
+            
+                -- Escritura de rN con valor de la pila
+                IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length));
                 SizeRegWB <= RecInWBAct.datasize;
                 DataRegInWB <= (others => '0');
-
+			   
+				---- solo existe este caso ----
                 case Source is
                     when WB_MEM =>
                         for i in 0 to SizeBits-1 loop
@@ -261,18 +235,19 @@ begin
                         report "Error: POPH configurado con un origen de dato no válido en writeback"
                         severity FAILURE;
                 end case;
-
+				
+				------- Habilito el enable --------------
                 EnableRegWB <= '1';
                 WAIT FOR 1 ns;
                 EnableRegWB <= '0';
                 WAIT FOR 1 ns;
 
-                -- 2) Escritura de SP con SP_base + 2
-                --    SP_base viene en data.decode(15 downto 0)
-                --variable sp_base : unsigned(15 downto 0);
+                -- Ahora hago la escritura del SP con SP_base + 2
+                -- SP_base viene en data.decode(15 downto 0)
+                -- variable sp_base : unsigned(15 downto 0);
 
                 sp_base := unsigned(RecInWBAct.data.decode(15 downto 0));
-                sp_base := sp_base + 2;  -- solo aquí se suma 2
+                sp_base := sp_base + 2;
 
                 IdRegWB   <= std_logic_vector(to_unsigned(ID_SP, IdRegWB'length));
                 SizeRegWB <= RecInWBAct.datasize;
@@ -283,16 +258,16 @@ begin
 				EnableDecWrPend <= '1';  WAIT FOR 1 ns;
 				EnableDecWrPend <= '0';  WAIT FOR 1 ns;
 
-				
+				------- Habilito el enable nuevamente para el sp -------------- 
                 EnableRegWB <= '1';
                 WAIT FOR 1 ns;
                 EnableRegWB <= '0';
                 WAIT FOR 1 ns;
-
-            else
-                ----------------------------------------------------------------
+			
+			--------------------------------------------------------------------------------------------------------
+            
+			else
                 -- Resto de instrucciones: comportamiento original
-                ----------------------------------------------------------------
                 IdRegWB   <= std_logic_vector(to_unsigned(Mode-1, IdRegWB'length));
                 SizeRegWB <= RecInWBAct.datasize;
                 DataRegInWB <= (others => '0');

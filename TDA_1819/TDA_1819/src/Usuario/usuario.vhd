@@ -39,7 +39,7 @@ use std.TEXTIO.all;
 entity usuario is
 	-- Generic declarations of the tested unit
 	generic (
-		ProgName	: STRING := "test_pila.asm";
+		ProgName	: STRING := "ejercicio3.asm";
 		Pipelining	: BOOLEAN := true;
 		Cores 		: INTEGER := 1);  	
 			
